@@ -4,8 +4,10 @@ if (!class_exists('AtfHtmlHelper')) {
     {
         public static function assets () {
             wp_enqueue_style('atf-options-css', plugin_dir_url(__FILE__) . 'assets/options.css', array(), '1.0', 'all');
+            wp_enqueue_style( 'wp-color-picker' );
             wp_enqueue_script('atf-options-js', plugin_dir_url(__FILE__) . 'assets/atf-options.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', false);
-            wp_localize_script('atf-options-js', 'atf_html_helper', array('url' => get_template_directory_uri().'/atf/options/admin/assets/blank.png'));
+            wp_enqueue_media();
+            wp_localize_script('atf-options-js', 'atf_html_helper', array('url' => plugin_dir_url(__FILE__) . 'assets/blank.png'));
         }
         public static function group($args = array())
         {
@@ -27,7 +29,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 </tr>
                 </thead>
                 <tbody>
-                <?php
+                <?phpwp_enqueue_style( 'wp-color-picker' );
                 $i = 1;
                 foreach ($args['value'] as $row_key => $row_val) {
                     echo '<tr class="row">';
@@ -200,6 +202,9 @@ if (!class_exists('AtfHtmlHelper')) {
 
         }
 
+        public static function media($args = array()) {
+            self::addMedia($args);
+        }
         public static function addMedia($args = array())
         {
 
@@ -209,11 +214,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 'addClass' => '',
             );
 
-            foreach ($default as $key => $value) {
-                if (!isset($args[$key])) {
-                    $args[$key] = $value;
-                }
-            }
+            $args = wp_parse_args($args, $default);
 
             $result = '<div class="uploader">';
             $result .= '<input type="hidden" id="' . $args['id'] . '" name="' . $args['name'] . '" value="' . $args['value'] . '" class="' . $args['class'] . $args['addClass'] . '" />';

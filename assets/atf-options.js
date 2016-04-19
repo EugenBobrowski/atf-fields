@@ -5,7 +5,8 @@
     var $optionsPanel, custom_file_frame, $radioImages;
 
     $(document).ready(function () {
-        $optionsPanel = $('.options-panel');
+
+        $optionsPanel = $('.atf-fields');
         $radioImages = $('.radio-image');
 
         $optionsPanel.find('.uploader').find("img[src='']").attr("src", atf_html_helper.url);
@@ -16,10 +17,10 @@
             event.preventDefault();
 
             // If the media frame already exists, reopen it.
-            /*if ( typeof(custom_file_frame)!=="undefined" ) {
+            if ( typeof(custom_file_frame)!=="undefined" ) {
              custom_file_frame.open();
              return;
-             }*/
+             }
 
             // if its not null, its broking custom_file_frame's onselect "activeFileUploadContext"
             custom_file_frame = null;
@@ -193,7 +194,7 @@
         var $mediaContainer = $(this).parent();
         $mediaContainer.find('input').val('');
         $mediaContainer.find('.atf-options-upload').show('slow');
-        $mediaContainer.find('.atf-options-upload-screenshot').attr("src", upload.url);
+        $mediaContainer.find('.atf-options-upload-screenshot').attr("src", atf_html_helper.url);
         $mediaContainer.find('.atf-options-upload-remove').hide('slow');
     };
     $.fn.resetOrder = function () {
