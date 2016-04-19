@@ -2,7 +2,11 @@
 if (!class_exists('AtfHtmlHelper')) {
     class AtfHtmlHelper
     {
-
+        public static function assets () {
+            wp_enqueue_style('atf-options-css', plugin_dir_url(__FILE__) . 'assets/options.css', array(), '1.0', 'all');
+            wp_enqueue_script('atf-options-js', plugin_dir_url(__FILE__) . 'assets/atf-options.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', false);
+            wp_localize_script('atf-options-js', 'atf_html_helper', array('url' => get_template_directory_uri().'/atf/options/admin/assets/blank.png'));
+        }
         public static function group($args = array())
         {
             ?>
@@ -17,7 +21,7 @@ if (!class_exists('AtfHtmlHelper')) {
                     foreach ($args['items'] as $key => $item) {
                         echo '<th>' . $item['title'] . '</th>';
                     }
-
+                    
                     ?>
                     <th class="group-row-controls"></th>
                 </tr>

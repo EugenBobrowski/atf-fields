@@ -8,7 +8,7 @@
         $optionsPanel = $('.options-panel');
         $radioImages = $('.radio-image');
 
-        $optionsPanel.find('.uploader').find("img[src='']").attr("src", redux_upload.url);
+        $optionsPanel.find('.uploader').find("img[src='']").attr("src", atf_html_helper.url);
 
         $optionsPanel.on('click', ".atf-options-upload", function (event) {
             var activeFileUploadContext = $(this).parent();
@@ -193,7 +193,7 @@
         var $mediaContainer = $(this).parent();
         $mediaContainer.find('input').val('');
         $mediaContainer.find('.atf-options-upload').show('slow');
-        $mediaContainer.find('.atf-options-upload-screenshot').attr("src", redux_upload.url);
+        $mediaContainer.find('.atf-options-upload-screenshot').attr("src", upload.url);
         $mediaContainer.find('.atf-options-upload-remove').hide('slow');
     };
     $.fn.resetOrder = function () {
