@@ -29,14 +29,14 @@ if (!class_exists('AtfHtmlHelper')) {
                 </tr>
                 </thead>
                 <tbody>
-                <?phpwp_enqueue_style( 'wp-color-picker' );
+                <?php
                 $i = 1;
                 foreach ($args['value'] as $row_key => $row_val) {
                     echo '<tr class="row">';
                     echo '<td class="group-row-id">' . $i . '</td>';
                     foreach ($args['items'] as $key => $item) {
                         $item['id'] = $key;
-                        $item['desc'] = '';
+                        $item['desc'] = null;
                         $item['uniqid'] = uniqid($item['id']);
                         $item['name'] = $args['name'] . '[' . $row_key . '][' . $item['id'] . ']';
 
@@ -46,9 +46,12 @@ if (!class_exists('AtfHtmlHelper')) {
                         } else {
                             $item['value'] = $row_val[$item['id']];
                         }
+                        if (!isset($item['cell_style'])) $item['cell_style'] = '';
+
 
 
                         echo '<td '
+                            .'style="' . $item['cell_style'] . '"'
                             .'data-field-type="' . $item['type'] . '" '
                             .'data-field-name-template="' . $args['name'] . '[#][' . $item['id'] . ']' . '">';
                         $item['id'] = $item['uniqid'];
@@ -366,8 +369,11 @@ if (!class_exists('AtfHtmlHelper')) {
         {
 
             $on = '';
-            if ($args['value']) {
+            if (!empty($args['value'])) {
                 $on = 'on';
+            }
+            if (empty($args['name'])) {
+                $args['name'] = $args['id'];
             }
             $result = '<a class="on-off-box ' . $on . '" href="#">';
             $result .= '<span class="tumbler"></span>';
