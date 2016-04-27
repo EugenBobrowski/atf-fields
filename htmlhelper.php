@@ -9,6 +9,10 @@ if (!class_exists('AtfHtmlHelper')) {
             wp_enqueue_media();
             wp_localize_script('atf-options-js', 'atf_html_helper', array('url' => plugin_dir_url(__FILE__) . 'assets/blank.png'));
         }
+
+        /**
+         * @param array $args
+         */
         public static function group($args = array())
         {
             ?>
@@ -21,7 +25,7 @@ if (!class_exists('AtfHtmlHelper')) {
                     <?php
 
                     foreach ($args['items'] as $key => $item) {
-                        echo '<th>' . $item['title'] . '</th>';
+                        echo '<th>' . esc_html($item['title']) . '</th>';
                     }
                     
                     ?>
@@ -52,8 +56,8 @@ if (!class_exists('AtfHtmlHelper')) {
 
                         echo '<td '
                             .'style="' . $item['cell_style'] . '"'
-                            .'data-field-type="' . $item['type'] . '" '
-                            .'data-field-name-template="' . $args['name'] . '[#][' . $item['id'] . ']' . '">';
+                            .'data-field-type="' . esc_attr($item['type']) . '" '
+                            .'data-field-name-template="' . esc_attr($args['name'] . '[#][' . $item['id'] . ']') . '">';
                         $item['id'] = $item['uniqid'];
                         echo self::$item['type']($item);
                         echo '</td>';
@@ -78,7 +82,7 @@ if (!class_exists('AtfHtmlHelper')) {
                     foreach ($args['items'] as $key => $item) {
 
                         echo '<td>';
-                        echo (empty($item['desc'])) ? '' : '<p  class="description">' . $item['desc'] . '</p>';
+                        echo (empty($item['desc'])) ? '' : '<p  class="description">' . esc_html($item['desc']) . '</p>';
                         echo '</td>';
                     }
 
@@ -92,6 +96,9 @@ if (!class_exists('AtfHtmlHelper')) {
         <?php
         }
 
+        /**
+         * @param array $args
+         */
         public static function text($args = array())
         {
             $default = array(
@@ -107,7 +114,7 @@ if (!class_exists('AtfHtmlHelper')) {
             }
             $result = '<input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" />';
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . $args['desc'] . '</p>';
+                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
 
             echo $result;
@@ -122,12 +129,10 @@ if (!class_exists('AtfHtmlHelper')) {
             self::text($args);
         }
 
+        /**
+         * @param array $args
+         */
         public static function media($args = array()) {
-            self::addMedia($args);
-        }
-        public static function addMedia($args = array())
-        {
-
             $default = array(
                 'value' => '',
                 'class' => 'regular-text',
@@ -137,8 +142,8 @@ if (!class_exists('AtfHtmlHelper')) {
             $args = wp_parse_args($args, $default);
 
             $result = '<div class="uploader">';
-            $result .= '<input type="hidden" id="' . $args['id'] . '" name="' . $args['name'] . '" value="' . $args['value'] . '" class="' . $args['class'] . $args['addClass'] . '" />';
-            $result .= '<img class="atf-options-upload-screenshot" id="screenshot-' . $args['id'] . '" src="' . $args['value'] . '" />';
+            $result .= '<input type="hidden" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_url($args['value']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" />';
+            $result .= '<img class="atf-options-upload-screenshot" id="' . esc_attr('screenshot-' . $args['id']) . '" src="' . esc_url($args['value']) . '" />';
             if ($args['value'] == '') {
                 $remove = ' style="display:none;"';
                 $upload = '';
@@ -146,37 +151,54 @@ if (!class_exists('AtfHtmlHelper')) {
                 $remove = '';
                 $upload = ' style="display:none;"';
             }
-            $result .= ' <a data-update="Select File" data-choose="Choose a File" href="javascript:void(0);" class="atf-options-upload button-secondary"' . $upload . ' rel-id="' . $args['id'] . '">' . __('Upload', 'atf') . '</a>';
-            $result .= ' <a href="javascript:void(0);" class="atf-options-upload-remove  button-secondary"' . $remove . ' rel-id="' . $args['id'] . '">' . __('Remove Upload', 'atf') . '</a>';
+            $result .= ' <a data-update="Select File" data-choose="Choose a File" href="javascript:void(0);" class="atf-options-upload button-secondary"' . $upload . ' rel-id="' . esc_attr($args['id']) . '">' . __('Upload', 'atf') . '</a>';
+            $result .= ' <a href="javascript:void(0);" class="atf-options-upload-remove  button-secondary"' . esc_attr($remove) . ' rel-id="' . esc_attr($args['id']) . '">' . __('Remove Upload', 'atf') . '</a>';
             $result .= '</div>';
 
 
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . $args['desc'] . '</p>';
+                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
 
             echo $result;
+
         }
 
-        public static function color($args = array()){
-            self::colorPicker($args);
-        }
-        public static function colorPicker($args = array())
+        /**
+         * @deprecated
+         * @param array $args
+         */
+        public static function addMedia($args = array())
         {
-            $default = array(
+            self::media($args);
+        }
+
+        /**
+         * @param array $args
+         */
+        public static function color($args = array()){
+            $args = wp_parse_args($args, array(
                 'value' => '',
                 'class' => 'color-picker-hex',
                 'addClass' => '',
-            );
+            ));
 
-            $args = wp_parse_args($args, $default);
-
-            $result = '<div class="customize-control-content"><input type="text" id="' . $args['id'] . '" name="' . $args['name'] . '" value="' . $args['value'] . '" class="' . $args['class'] . $args['addClass'] . '" /></div>';
+            $result = '<div class="customize-control-content"><input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . $args['value'] . '" class="' . $args['class'] . $args['addClass'] . '" /></div>';
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . $args['desc'] . '</p>';
+                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
 
             echo $result;
+
+        }
+
+        /**
+         * @deprecated
+         * @param array $args
+         */
+        public static function colorPicker($args = array())
+        {
+            self::color($args);
         }
 
         public static function textarea($args = array())
@@ -193,9 +215,9 @@ if (!class_exists('AtfHtmlHelper')) {
                     $args[$key] = $value;
                 }
             }
-            $result = '<textarea id="' . $args['id'] . '" name="' . $args['name'] . '" rows="' . $args['rows'] . '" cols="' . $args['cols'] . '" class="' . $args['class'] . $args['addClass'] . '" >' . $args['value'] . '</textarea>';
+            $result = '<textarea id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" rows="' . esc_attr($args['rows']) . '" cols="' . esc_attr($args['cols']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" >' . esc_textarea($args['value']) . '</textarea>';
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . $args['desc'] . '</p>';
+                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
             echo $result;
         }
@@ -204,10 +226,6 @@ if (!class_exists('AtfHtmlHelper')) {
 
 
         public static function editor($args = array()) {
-            self::wysiwyg($args);
-        }
-        public static function wysiwyg($args = array())
-        {
             $default = array(
                 'value' => '',
                 'class' => 'regular-text',
@@ -239,8 +257,18 @@ if (!class_exists('AtfHtmlHelper')) {
             $args['options']['textarea_name'] = $args['name'];
             wp_editor(stripslashes($args['value']), $args['id'], $args['options']);
             if (isset($args['desc'])) {
-                echo '<p class="description">' . $args['desc'] . '</p>';
+                echo '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
+
+        }
+
+        /**
+         * @deprecated
+         * @param array $args
+         */
+        public static function wysiwyg($args = array())
+        {
+            self::editor($args);
         }
 
         public static function radioButtons($args = array())
@@ -259,7 +287,7 @@ if (!class_exists('AtfHtmlHelper')) {
             }
 
             $result = '';
-            $result .= '<fieldset class="' . $args['class'] . $args['addClass'] . '" >';
+            $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
             foreach ($args['options'] as $value => $label) {
                 $checked = '';
                 if ($value == $args['value']) {
@@ -268,7 +296,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
 
                 $result .= '<label class="' . $checked . '" >';
-                $result .= '<input type="radio" id="' . $args['id'] . '" name="' . $args['name'] . '" value="' . $value . '" ' . checked($args['value'], $value, false) . ' />';
+                $result .= '<input type="radio" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($value) . '" ' . checked($args['value'], $value, false) . ' />';
                 $result .= $label;
                 $result .= '</label>';
             }
@@ -292,17 +320,17 @@ if (!class_exists('AtfHtmlHelper')) {
             if (empty($args['name'])) {
                 $args['name'] = $args['id'];
             }
-            $result = '<a class="on-off-box ' . $on . '" href="#">';
+            $result = '<a class="' . esc_attr('on-off-box ' . $on) . '" href="#">';
             $result .= '<span class="tumbler"></span>';
             $result .= '<span class="text on">on</span>';
             $result .= '<span class="text off">off</span>';
-            $result .= '<input type="radio" class="on" name="' . $args['name'] . '" value="1"  ' . checked($args['value'], '1', false) . ' >';
-            $result .= '<input type="radio" class="off" name="' . $args['name'] . '" value="0" ' . checked($args['value'], '0', false) . ' >';
+            $result .= '<input type="radio" class="on" name="' . esc_attr($args['name']) . '" value="1"  ' . checked($args['value'], '1', false) . ' >';
+            $result .= '<input type="radio" class="off" name="' . esc_attr($args['name']) . '" value="0" ' . checked($args['value'], '0', false) . ' >';
             $result .= '<span class="text off">off</span>';
             $result .= '</a>';
 
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . $args['desc'] . '</p>';
+                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
 
             echo $result;
@@ -314,14 +342,14 @@ if (!class_exists('AtfHtmlHelper')) {
 
                 self::selectFromTaxonomy($args);
             } else {
-                $result = '<select name="' . $args['name'] . '">';
+                $result = '<select name="' . esc_attr($args['name']) . '">';
 
                 if (!isset($args['values'])) {
                     $args['values'] = $args['options'];
                 }
 
                 foreach ($args['values'] as $value => $text) {
-                    $result .= '<option value="' . $value . '" ' . selected($value, $args['value'], false) . ' > ' . $text . ' </option>';
+                    $result .= '<option value="' . esc_attr($value) . '" ' . selected($value, $args['value'], false) . ' > ' . $text . ' </option>';
                 }
 
                 $result .= '</select>';
@@ -346,7 +374,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 echo "Taxonomy not exist";
             }
             if (isset($args['desc'])) {
-                echo '<p class="description">' . $args['desc'] . '</p>';
+                echo '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
         }
     //    public static function
@@ -360,8 +388,8 @@ if (!class_exists('AtfHtmlHelper')) {
                     $args['value'] = array($args['value']);
                 }
 
-                $cats = get_terms($args['taxonomy'],
-                    array(
+                $cats = get_terms(array(
+                        'taxonomy' => $args['taxonomy'],
                         'hide_empty' => $args['hide_empty'],
                     ));
 
@@ -370,17 +398,17 @@ if (!class_exists('AtfHtmlHelper')) {
 
                 foreach ($cats as $cat) {
                     $result .= ' <label><input type="checkbox"'
-                        . ' name="' . $args['name'] . '[]"'
-                        . ' value="' . $cat->term_id . '" ';
+                        . ' name="' . esc_attr($args['name'] . '[]') . '"'
+                        . ' value="' . esc_attr($cat->term_id) . '" ';
                     $result .= (in_array($cat->term_id, $args['value'])) ? 'checked="checked"' : '';
-                    $result .= ' > ' . $cat->name . '</label> ';
+                    $result .= ' > ' . esc_html($cat->name) . '</label> ';
 
                 }
 
                 $result .= '';
 
                 if (isset($args['desc'])) {
-                    $result .= '<p class="description">' . $args['desc'] . '</p>';
+                    $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
                 }
 
                 echo $result;
@@ -428,8 +456,8 @@ if (!class_exists('AtfHtmlHelper')) {
 
             foreach ($options as $val=>$label) {
                 $result .= ' <label><input type="checkbox"'
-                    . ' name="' . $args['name'] . '[]"'
-                    . ' value="' . $val . '" ';
+                    . ' name="' . esc_attr($args['name'] . '[]') . '"'
+                    . ' value="' . esc_attr($val) . '" ';
                 $result .= (in_array($val, $args['value'])) ? 'checked="checked"' : '';
                 $result .= ' > ' . $label . '</label> ';
                 if ($vertical) $result .= '<br />';
@@ -439,7 +467,7 @@ if (!class_exists('AtfHtmlHelper')) {
             $result .= '';
 
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . $args['desc'] . '</p>';
+                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
 
             echo $result;
@@ -455,7 +483,8 @@ if (!class_exists('AtfHtmlHelper')) {
             ));
 
 
-            $terms = (array)get_terms($args['taxonomy'], array(
+            $terms = (array)get_terms(array(
+                'taxonomy' => $args['taxonomy'],
                 'hide_empty' => $args['hide_empty'],
             ));
             // Initate an empty array
