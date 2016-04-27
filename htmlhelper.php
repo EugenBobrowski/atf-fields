@@ -94,11 +94,6 @@ if (!class_exists('AtfHtmlHelper')) {
 
         public static function text($args = array())
         {
-            self::textField($args);
-        }
-
-        public static function textField($args = array())
-        {
             $default = array(
                 'value' => '',
                 'class' => 'regular-text',
@@ -110,12 +105,21 @@ if (!class_exists('AtfHtmlHelper')) {
                     $args[$key] = $value;
                 }
             }
-            $result = '<input type="text" id="' . $args['id'] . '" name="' . $args['name'] . '" value="' . esc_attr($args['value']) . '" class="' . $args['class'] . $args['addClass'] . '" />';
+            $result = '<input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" />';
             if (isset($args['desc'])) {
                 $result .= '<p class="description">' . $args['desc'] . '</p>';
             }
 
             echo $result;
+        }
+
+        /**
+         * @deprecated
+         * @param array $args
+         */
+        public static function textField($args = array())
+        {
+            self::text($args);
         }
 
         public static function typography($args = array())
