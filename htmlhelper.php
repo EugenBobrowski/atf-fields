@@ -101,18 +101,32 @@ if (!class_exists('AtfHtmlHelper')) {
          */
         public static function text($args = array())
         {
-            $default = array(
+            $args = wp_parse_args($args, array(
                 'value' => '',
                 'class' => 'regular-text',
                 'addClass' => '',
-            );
+            ));
 
-            foreach ($default as $key => $value) {
-                if (!isset($args[$key])) {
-                    $args[$key] = $value;
-                }
-            }
             $result = '<input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" />';
+            if (isset($args['desc'])) {
+                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
+            }
+
+            echo $result;
+        }        /**
+         * @param array $args
+         */
+        public static function number($args = array())
+        {
+            $args = wp_parse_args($args, array(
+                'value' => '',
+                'class' => 'regular-text',
+                'addClass' => '',
+                'step' => 1,
+                'min' => 0,
+            ));
+
+            $result = '<input type="number" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" />';
             if (isset($args['desc'])) {
                 $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
