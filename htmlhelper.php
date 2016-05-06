@@ -438,6 +438,13 @@ if (!class_exists('AtfHtmlHelper')) {
 
         public static function checkbox($args)
         {
+            $args = wp_parse_args($args, array(
+                'vertical' => true,
+                'value' => '',
+                'class' => '',
+                'addClass' => '',
+            ));
+
             if (isset($args['taxonomy'])) {
                 if (taxonomy_exists($args['taxonomy'])) {
                     $options = self::get_taxonomy_options($args);
@@ -463,25 +470,17 @@ if (!class_exists('AtfHtmlHelper')) {
             }
 
             $result = '';
-
-            if (isset($args['vertical']) && $args['vertical']) {
-                $vertical = true;
-            } else {
-                $vertical = false;
-            }
-
-
+            $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
             foreach ($options as $val=>$label) {
                 $result .= ' <label><input type="checkbox"'
                     . ' name="' . esc_attr($args['name'] . '[]') . '"'
                     . ' value="' . esc_attr($val) . '" ';
                 $result .= (in_array($val, $args['value'])) ? 'checked="checked"' : '';
                 $result .= ' > ' . $label . '</label> ';
-                if ($vertical) $result .= '<br />';
+                if ($args['vertical']) $result .= '<br />';
 
             }
-
-            $result .= '';
+            $result .= '</fieldset>';
 
             if (isset($args['desc'])) {
                 $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
