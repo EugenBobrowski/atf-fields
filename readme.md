@@ -35,18 +35,17 @@
 				 'cell_style' => 'text-align: center;',
 			 ),
 		 ),
+		 //use default key for ATF Options 
 		 'value' => array(
-		 	'path' => array(
-		 		'/',
-		 		'/wp-content/'
+		 	array(
+		 		'path' => '/',
+		 		'bots' => 'all'
+		 		'allowed' => 1
 		 	),
-		 	'bots' => array(
-		 		'',
-		 		'google'
-		 	),
-		 	'allowed' => array(
-		 		0,
-		 		1
+		 	array(
+		 		'path' => '/wp-admin/',
+		 		'bots' => 'all'
+		 		'allowed' => 0
 		 	),
 		 ),
 	 )

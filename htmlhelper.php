@@ -2,12 +2,13 @@
 if (!class_exists('AtfHtmlHelper')) {
     class AtfHtmlHelper
     {
-        public static function assets () {
-            wp_enqueue_style('atf-options-css', plugin_dir_url(__FILE__) . 'assets/options.css', array(), '1.0', 'all');
+        public static function assets ($url = null) {
+            if (!$url) { $url = plugin_dir_url(__FILE__); }
+            wp_enqueue_style('atf-options-css', $url . 'assets/options.css', array(), '1.0', 'all');
             wp_enqueue_style( 'wp-color-picker' );
-            wp_enqueue_script('atf-options-js', plugin_dir_url(__FILE__) . 'assets/atf-options.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', false);
+            wp_enqueue_script('atf-options-js', $url . 'assets/atf-options.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', false);
             wp_enqueue_media();
-            wp_localize_script('atf-options-js', 'atf_html_helper', array('url' => plugin_dir_url(__FILE__) . 'assets/blank.png'));
+            wp_localize_script('atf-options-js', 'atf_html_helper', array('url' => $url . 'assets/blank.png'));
         }
 
         /**
@@ -15,6 +16,7 @@ if (!class_exists('AtfHtmlHelper')) {
          */
         public static function group($args = array())
         {
+
             ?>
 
 
@@ -35,6 +37,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 <tbody>
                 <?php
                 $i = 1;
+
                 foreach ($args['value'] as $row_key => $row_val) {
                     echo '<tr class="row">';
                     echo '<td class="group-row-id">' . $i . '</td>';
