@@ -139,6 +139,37 @@
   * {
     box-sizing: border-box;
   }
+  .check-buttons {
+    label {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 2px;
+      background: #f7f7f7;
+      text-shadow: none;
+      font-weight: 600;
+      font-size: 13px;
+      border: 1px solid #ccc;
+
+      &:hover {
+        background: #eee;
+      }
+      span {
+        display: block;
+      }
+
+    }
+    input {
+      display: none;
+      &:checked + label {
+        border-color: #008EC2;
+        background: #00a0d2;
+        color: #fff;
+      }
+    }
+    img {
+      border: 5px solid #eee;
+    }
+  }
   .radio-image {
     label {
       display: block;

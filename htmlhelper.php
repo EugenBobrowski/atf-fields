@@ -288,40 +288,6 @@ if (!class_exists('AtfHtmlHelper')) {
             self::editor($args);
         }
 
-        public static function radioButtons($args = array())
-        {
-
-            $default = array(
-                'value' => '',
-                'class' => '',
-                'addClass' => '',
-            );
-
-            foreach ($default as $key => $value) {
-                if (!isset($args[$key])) {
-                    $args[$key] = $value;
-                }
-            }
-
-            $result = '';
-            $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
-            foreach ($args['options'] as $value => $label) {
-                $checked = '';
-                if ($value == $args['value']) {
-                    $checked = "checked";
-                }
-
-
-                $result .= '<label class="' . $checked . '" >';
-                $result .= '<input type="radio" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($value) . '" ' . checked($args['value'], $value, false) . ' />';
-                $result .= $label;
-                $result .= '</label>';
-            }
-            $result .= '</fieldset>';
-
-            echo $result;
-        }
-
         public static function tumbler($args = array())
         {
             self::onOffBox($args);
@@ -436,6 +402,80 @@ if (!class_exists('AtfHtmlHelper')) {
 
         }
 
+        /**
+         * @deprecated
+         * @param array $args
+         *
+         */
+        public static function radioButtons($args = array())
+        {
+
+            $default = array(
+                'value' => '',
+                'class' => '',
+                'addClass' => '',
+            );
+
+            foreach ($default as $key => $value) {
+                if (!isset($args[$key])) {
+                    $args[$key] = $value;
+                }
+            }
+
+            $result = '';
+            $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
+            foreach ($args['options'] as $value => $label) {
+                $checked = '';
+                if ($value == $args['value']) {
+                    $checked = "checked";
+                }
+
+
+                $result .= '<label class="' . $checked . '" >';
+                $result .= '<input type="radio" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($value) . '" ' . checked($args['value'], $value, false) . ' />';
+                $result .= $label;
+                $result .= '</label>';
+            }
+            $result .= '</fieldset>';
+
+            echo $result;
+        }
+        public static function radio($args = array())
+        {
+
+            $default = array(
+                'vertical' => true,
+                'value' => '',
+                'class' => '',
+                'addClass' => '',
+            );
+
+            foreach ($default as $key => $value) {
+                if (!isset($args[$key])) {
+                    $args[$key] = $value;
+                }
+            }
+
+            $result = '';
+            $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
+            foreach ($args['options'] as $value => $label) {
+                $id = esc_attr($args['name'] . '__' . $value);
+                $checked = '';
+                if ($value == $args['value']) {
+                    $checked = "checked";
+                }
+
+                $result .= '<input type="radio"'
+                    . ' id="' . $id . '"'
+                    . ' name="' . esc_attr($args['name']) . '" value="' . esc_attr($value) . '" ' . checked($args['value'], $value, false) . ' />';
+                $result .= ' <label for="' . $id . '">' . esc_html($label) . '</label> ';
+                if ($args['vertical']) $result .= '<br />';
+            }
+            $result .= '</fieldset>';
+
+            echo $result;
+        }
+
         public static function checkbox($args)
         {
             $args = wp_parse_args($args, array(
@@ -472,11 +512,14 @@ if (!class_exists('AtfHtmlHelper')) {
             $result = '';
             $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
             foreach ($options as $val=>$label) {
-                $result .= ' <label><input type="checkbox"'
+                $id = esc_attr($args['name'] . '__' . $val);
+                $result .= '<input type="checkbox"'
+                    . ' id="' . $id . '"'
                     . ' name="' . esc_attr($args['name'] . '[]') . '"'
                     . ' value="' . esc_attr($val) . '" ';
                 $result .= (in_array($val, $args['value'])) ? 'checked="checked"' : '';
-                $result .= ' > ' . $label . '</label> ';
+                $result .= ' > ';
+                $result .= ' <label for="' . $id . '">' . esc_html($label) . '</label> ';
                 if ($args['vertical']) $result .= '<br />';
 
             }
