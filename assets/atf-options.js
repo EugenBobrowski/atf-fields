@@ -9,6 +9,8 @@
         $optionsPanel = $('.atf-fields');
         $radioImages = $('.radio-image');
 
+        $optionsPanel.find('.chosen-select').chosen();
+
         $optionsPanel.find('.uploader').find("img[src='']").attr("src", atf_html_helper.url);
 
         $optionsPanel.on('click', ".atf-options-upload", function (event) {

@@ -2,13 +2,26 @@
 if (!class_exists('AtfHtmlHelper')) {
     class AtfHtmlHelper
     {
-        public static function assets ($url = null) {
-            if (!$url) { $url = plugin_dir_url(__FILE__); }
+        public static function assets($url = null)
+        {
+            if (!$url) {
+                $url = plugin_dir_url(__FILE__);
+            }
+            //Chosen
+            wp_enqueue_script('chosen-script', $url . 'assets/chosen.jquery.min.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', false);
+
+
             wp_enqueue_style('atf-options-css', $url . 'assets/options.css', array(), '1.0', 'all');
-            wp_enqueue_style( 'wp-color-picker' );
-            wp_enqueue_script('atf-options-js', $url . 'assets/atf-options.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', false);
+            wp_enqueue_style('wp-color-picker');
             wp_enqueue_media();
+
+            wp_enqueue_script('atf-options-js', $url . 'assets/atf-options.js', array(
+                'jquery', 'wp-color-picker', 'jquery-ui-sortable', 'chosen-script'), '1.0', false);
+
             wp_localize_script('atf-options-js', 'atf_html_helper', array('url' => $url . 'assets/blank.png'));
+
+
+
         }
 
         /**
@@ -29,7 +42,7 @@ if (!class_exists('AtfHtmlHelper')) {
                     foreach ($args['items'] as $key => $item) {
                         echo '<th>' . esc_html($item['title']) . '</th>';
                     }
-                    
+
                     ?>
                     <th class="group-row-controls"></th>
                 </tr>
@@ -56,11 +69,10 @@ if (!class_exists('AtfHtmlHelper')) {
                         if (!isset($item['cell_style'])) $item['cell_style'] = '';
 
 
-
                         echo '<td '
-                            .'style="' . $item['cell_style'] . '"'
-                            .'data-field-type="' . esc_attr($item['type']) . '" '
-                            .'data-field-name-template="' . esc_attr($args['name'] . '[#][' . $item['id'] . ']') . '">';
+                            . 'style="' . $item['cell_style'] . '"'
+                            . 'data-field-type="' . esc_attr($item['type']) . '" '
+                            . 'data-field-name-template="' . esc_attr($args['name'] . '[#][' . $item['id'] . ']') . '">';
                         $item['id'] = $item['uniqid'];
                         echo self::$item['type']($item);
                         echo '</td>';
@@ -96,7 +108,7 @@ if (!class_exists('AtfHtmlHelper')) {
             </table>
 
 
-        <?php
+            <?php
         }
 
         /**
@@ -116,7 +128,9 @@ if (!class_exists('AtfHtmlHelper')) {
             }
 
             echo $result;
-        }        /**
+        }
+
+        /**
          * @param array $args
          */
         public static function number($args = array())
@@ -137,19 +151,12 @@ if (!class_exists('AtfHtmlHelper')) {
             echo $result;
         }
 
-        /**
-         * @deprecated
-         * @param array $args
-         */
-        public static function textField($args = array())
-        {
-            self::text($args);
-        }
 
         /**
          * @param array $args
          */
-        public static function media($args = array()) {
+        public static function media($args = array())
+        {
             $default = array(
                 'value' => '',
                 'class' => 'regular-text',
@@ -182,18 +189,10 @@ if (!class_exists('AtfHtmlHelper')) {
         }
 
         /**
-         * @deprecated
          * @param array $args
          */
-        public static function addMedia($args = array())
+        public static function color($args = array())
         {
-            self::media($args);
-        }
-
-        /**
-         * @param array $args
-         */
-        public static function color($args = array()){
             $args = wp_parse_args($args, array(
                 'value' => '',
                 'class' => 'color-picker-hex',
@@ -207,15 +206,6 @@ if (!class_exists('AtfHtmlHelper')) {
 
             echo $result;
 
-        }
-
-        /**
-         * @deprecated
-         * @param array $args
-         */
-        public static function colorPicker($args = array())
-        {
-            self::color($args);
         }
 
         public static function textarea($args = array())
@@ -239,10 +229,8 @@ if (!class_exists('AtfHtmlHelper')) {
             echo $result;
         }
 
-
-
-
-        public static function editor($args = array()) {
+        public static function editor($args = array())
+        {
             $default = array(
                 'value' => '',
                 'class' => 'regular-text',
@@ -279,23 +267,8 @@ if (!class_exists('AtfHtmlHelper')) {
 
         }
 
-        /**
-         * @deprecated
-         * @param array $args
-         */
-        public static function wysiwyg($args = array())
-        {
-            self::editor($args);
-        }
-
         public static function tumbler($args = array())
         {
-            self::onOffBox($args);
-        }
-
-        public static function onOffBox($args = array())
-        {
-
             $on = '';
             if (!empty($args['value'])) {
                 $on = 'on';
@@ -318,6 +291,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
             echo $result;
         }
+
 
         public static function select($args)
         {
@@ -342,6 +316,29 @@ if (!class_exists('AtfHtmlHelper')) {
 
         }
 
+        public static function multiselect ($args) {
+            $args = wp_parse_args($args, array(
+
+            ));
+            $result = '<select ' .
+                'multiple="multiple" ' .
+                'name="' . esc_attr($args['name']) . '"' .
+                'class="chosen-select"' .
+                'data-placeholder="Select Your Options" style="width:80%;">';
+
+            if (!isset($args['values'])) {
+                $args['values'] = $args['options'];
+            }
+
+            foreach ($args['values'] as $value => $text) {
+                $result .= '<option value="' . esc_attr($value) . '" ' . selected($value, $args['value'], false) . ' > ' . $text . ' </option>';
+            }
+
+            $result .= '</select>';
+
+            echo $result;
+        }
+
         public static function taxonomy_select($args)
         {
             self::selectFromTaxonomy($args);
@@ -360,7 +357,8 @@ if (!class_exists('AtfHtmlHelper')) {
                 echo '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
         }
-    //    public static function
+
+        //    public static function
 
 
         public static function checkboxTaxonomy($args)
@@ -372,9 +370,9 @@ if (!class_exists('AtfHtmlHelper')) {
                 }
 
                 $cats = get_terms(array(
-                        'taxonomy' => $args['taxonomy'],
-                        'hide_empty' => $args['hide_empty'],
-                    ));
+                    'taxonomy' => $args['taxonomy'],
+                    'hide_empty' => $args['hide_empty'],
+                ));
 
                 $result = '';
 
@@ -402,47 +400,8 @@ if (!class_exists('AtfHtmlHelper')) {
 
         }
 
-        /**
-         * @deprecated
-         * @param array $args
-         *
-         */
-        public static function radioButtons($args = array())
-        {
-
-            $default = array(
-                'value' => '',
-                'class' => '',
-                'addClass' => '',
-            );
-
-            foreach ($default as $key => $value) {
-                if (!isset($args[$key])) {
-                    $args[$key] = $value;
-                }
-            }
-
-            $result = '';
-            $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
-            foreach ($args['options'] as $value => $label) {
-                $checked = '';
-                if ($value == $args['value']) {
-                    $checked = "checked";
-                }
-
-
-                $result .= '<label class="' . $checked . '" >';
-                $result .= '<input type="radio" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($value) . '" ' . checked($args['value'], $value, false) . ' />';
-                $result .= $label;
-                $result .= '</label>';
-            }
-            $result .= '</fieldset>';
-
-            echo $result;
-        }
         public static function radio($args = array())
         {
-
             $default = array(
                 'vertical' => true,
                 'value' => '',
@@ -511,7 +470,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
             $result = '';
             $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
-            foreach ($options as $val=>$label) {
+            foreach ($options as $val => $label) {
                 $id = esc_attr($args['name'] . '__' . $val);
                 $result .= '<input type="checkbox"'
                     . ' id="' . $id . '"'
@@ -561,6 +520,64 @@ if (!class_exists('AtfHtmlHelper')) {
         {
             echo 'info';
         }
+
+
+        /**
+         * @deprecated
+         * @param array $args
+         */
+        public static function textField($args = array())
+        {
+            self::text($args);
+        }
+
+        /**
+         * @deprecated
+         * @param array $args
+         *
+         */
+        public static function radioButtons($args = array())
+        {
+            self::radio($args);
+        }
+
+        /**
+         * @deprecated
+         * @param array $args
+         */
+        public static function addMedia($args = array())
+        {
+            self::media($args);
+        }
+
+        /**
+         * @deprecated
+         * @param array $args
+         */
+        public static function colorPicker($args = array())
+        {
+            self::color($args);
+        }
+
+        /**
+         * @deprecated
+         * @param array $args
+         */
+        public static function wysiwyg($args = array())
+        {
+            self::editor($args);
+        }
+
+        /**
+         * @deprecated
+         * @param array $args
+         */
+        public static function onOffBox($args = array())
+        {
+            self::tumbler($args);
+
+        }
+
     }
 
 }
