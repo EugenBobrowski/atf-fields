@@ -2,7 +2,7 @@
 if (!class_exists('AtfHtmlHelper')) {
     class AtfHtmlHelper
     {
-        public static function assets($url = null)
+        public static function assets($prefix = null, $url = null)
         {
             if (!$url) {
                 $url = plugin_dir_url(__FILE__);
@@ -10,16 +10,16 @@ if (!class_exists('AtfHtmlHelper')) {
             //Chosen
             wp_enqueue_script('chosen-script', $url . 'assets/chosen.jquery.min.js', array('jquery', 'wp-color-picker', 'jquery-ui-sortable'), '1.0', false);
 
-
-            wp_enqueue_style('atf-options-css', $url . 'assets/options.css', array(), '1.0', 'all');
             wp_enqueue_style('wp-color-picker');
+
             wp_enqueue_media();
 
-            wp_enqueue_script('atf-options-js', $url . 'assets/atf-options.js', array(
+            //atf-fields
+            wp_enqueue_style('atf-fields-css', $url . 'assets/fields.css?prefix=' . $prefix, array(), '1.0', 'all');
+            wp_enqueue_script('atf-options-js', $url . 'assets/fields.js', array(
                 'jquery', 'wp-color-picker', 'jquery-ui-sortable', 'chosen-script'), '1.0', false);
 
             wp_localize_script('atf-options-js', 'atf_html_helper', array('url' => $url . 'assets/blank.png'));
-
 
 
         }
@@ -427,7 +427,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 $result .= '<input type="radio"'
                     . ' id="' . $id . '"'
                     . ' name="' . esc_attr($args['name']) . '" value="' . esc_attr($value) . '" ' . checked($args['value'], $value, false) . ' />';
-                $result .= ' <label for="' . $id . '">' . esc_html($label) . '</label> ';
+                $result .= ' <label for="' . $id . '">' . $label . '</label> ';
                 if ($args['vertical']) $result .= '<br />';
             }
             $result .= '</fieldset>';

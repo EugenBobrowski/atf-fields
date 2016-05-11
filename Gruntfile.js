@@ -8,7 +8,7 @@ module.exports = function (grunt) {
 					optimization: 2
 					},
 				files: {
-					"assets/options.css": "assets/options.less"
+					"assets/fields.css": "assets/fields.less"
 				}
 			}
 		},
