@@ -324,7 +324,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 'multiple="multiple" ' .
                 'name="' . esc_attr($args['name']) . '"' .
                 'class="chosen-select"' .
-                'data-placeholder="Select Your Options" style="width:80%;">';
+                'data-placeholder="Select Your Options" style="width:100%;">';
 
             if (!isset($args['values'])) {
                 $args['values'] = $args['options'];

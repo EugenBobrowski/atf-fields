@@ -6,6 +6,52 @@
 
 ### Textarea
 
+### Radio
+
+```php
+<?php AtfHtmlHelper::radio(array(
+                        'id' => 'receivers',
+                        'name' => 'receivers',
+                        'value' => '',
+                        'vertical' => false,
+                        'options' => array(
+                            'val1' => 'Label1',
+                            'val2' => 'Label2',
+                            'val3' => 'Label3',
+                            'val4' => 'Label4',
+                        )
+                    )); ?>
+```
+
+`vertical` _(Default: **true**)_ - show in vertical style.
+Just add `<br />` after label
+
+`class` _(Default: **empty string**)_ - use to apply your custom styles
+or add show as a buttons (styles included). To show in a button style just add class `.check-buttons`
+
+### Checkbox
+
+```php
+<?php AtfHtmlHelper::checkbox(array(
+                        'id' => 'receivers',
+                        'name' => 'receivers',
+                        'value' => '',
+                        'vertical' => false,
+                        'options' => array(
+                            'val1' => 'Label1',
+                            'val2' => 'Label2',
+                            'val3' => 'Label3',
+                            'val4' => 'Label4',
+                        )
+                    )); ?>
+```
+
+`vertical` _(Default: **true**)_ - show in vertical style.
+Just add `<br />` after label
+
+`class` _(Default: **empty string**)_ - use to apply your custom styles
+or add show as a buttons (styles included). To show in a button style just add class `.check-buttons`
+
 ### Group
  
 ```php
@@ -39,12 +85,12 @@
 		 'value' => array(
 		 	array(
 		 		'path' => '/',
-		 		'bots' => 'all'
+		 		'bots' => 'all',
 		 		'allowed' => 1
 		 	),
 		 	array(
 		 		'path' => '/wp-admin/',
-		 		'bots' => 'all'
+		 		'bots' => 'all',
 		 		'allowed' => 0
 		 	),
 		 ),
