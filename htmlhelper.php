@@ -322,7 +322,7 @@ if (!class_exists('AtfHtmlHelper')) {
             ));
             $result = '<select ' .
                 'multiple="multiple" ' .
-                'name="' . esc_attr($args['name']) . '"' .
+                'name="' . esc_attr($args['name'] . '[]') . '"' .
                 'class="chosen-select"' .
                 'data-placeholder="Select Your Options" style="width:100%;">';
 
