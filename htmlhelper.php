@@ -324,14 +324,14 @@ if (!class_exists('AtfHtmlHelper')) {
                 'multiple="multiple" ' .
                 'name="' . esc_attr($args['name'] . '[]') . '"' .
                 'class="chosen-select"' .
-                'data-placeholder="Select Your Options" style="width:100%;">';
+                'data-placeholder="Select Your Options">';
 
             if (!isset($args['values'])) {
                 $args['values'] = $args['options'];
             }
 
             foreach ($args['values'] as $value => $text) {
-                $result .= '<option value="' . esc_attr($value) . '" ' . selected($value, $args['value'], false) . ' > ' . $text . ' </option>';
+                $result .= '<option value="' . esc_attr($value) . '" ' . selected($value, (in_array($value, $args['value']) ? $value : ''), false) . ' > ' . $text . ' </option>';
             }
 
             $result .= '</select>';
