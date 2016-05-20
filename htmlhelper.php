@@ -326,9 +326,9 @@ if (!class_exists('AtfHtmlHelper')) {
                 'class="chosen-select"' .
                 'data-placeholder="Select Your Options">';
 
-            if (!isset($args['values'])) {
-                $args['values'] = $args['options'];
-            }
+            if (!isset($args['values'])) $args['values'] = $args['options'];
+
+            if (!is_array($args['value'])) $args['value'] = array($args['value']);
 
             foreach ($args['values'] as $value => $text) {
                 $result .= '<option value="' . esc_attr($value) . '" ' . selected($value, (in_array($value, $args['value']) ? $value : ''), false) . ' > ' . $text . ' </option>';
@@ -495,6 +495,8 @@ if (!class_exists('AtfHtmlHelper')) {
 
         public static function get_taxonomy_options($args = array())
         {
+            if (!is_array($args) && !empty($args)) $args = array('taxonomy' => $args);
+
             $args = wp_parse_args($args, array(
                 'taxonomy' => 'category',
                 'hide_empty' => false,
