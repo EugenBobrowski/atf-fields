@@ -208,72 +208,76 @@
       border: 5px solid #eee;
     }
   }
-  .on-off-box {
+  .tumbler-container {
     @height: 30px;
     @width: 60px;
     @margin: 2px;
     @diameter: (@height - ( @margin * 2 ) );
-
-    display: inline-block;
-    position: relative;
-    height: @height;
-    width: @width;
-    border-radius: (@height / 2);
-    background-color: #FF6347;
-    vertical-align: middle;
-    .transition(background-color 2s ease);
-
     input {
       display: none;
+
+      &:checked + .on-off-box {
+        background-color: #6AA772;
+        .transition(background-color 2s ease);
+        .tumbler {
+          left: ( @width - @margin - @diameter);
+          .transition(left 1s ease);
+        }
+        .text {
+          &.on {
+            opacity: 1;
+          }
+          &.off {
+            opacity: 0;
+          }
+        }
+      }
     }
-    &.on {
-      background-color: #6AA772;
+
+    .on-off-box {
+      display: inline-block;
+      position: relative;
+      height: @height;
+      width: @width;
+      border-radius: (@height / 2);
+      background-color: #FF6347;
+      vertical-align: middle;
       .transition(background-color 2s ease);
+
       .tumbler {
-        left: ( @width - @margin - @diameter);
+        display: block;
+        position: absolute;
+        left: @margin;
+        top: @margin;
+        background-color: #fff;
+        height: @diameter;
+        width: @diameter;
+        border-radius: 50%;
         .transition(left 1s ease);
       }
       .text {
+        display: block;
+        position: absolute;
+        color: #fff;
+        width: (@width - @diameter - (@margin * 2));
+        height: (@height - (@margin * 2));
+        line-height: (@height - (@margin * 2));
+        top: @margin;
+        text-align: center;
+        .transition(opacity 2s ease);
+
         &.on {
-          opacity: 1;
-        }
-        &.off {
+          left: @margin;
           opacity: 0;
         }
-      }
-    }
-    .tumbler {
-      display: block;
-      position: absolute;
-      left: @margin;
-      top: @margin;
-      background-color: #fff;
-      height: @diameter;
-      width: @diameter;
-      border-radius: 50%;
-      .transition(left 1s ease);
-    }
-    .text {
-      display: block;
-      position: absolute;
-      color: #fff;
-      width: (@width - @diameter - (@margin * 2));
-      height: (@height - (@margin * 2));
-      line-height: (@height - (@margin * 2));
-      top: @margin;
-      text-align: center;
-      .transition(opacity 2s ease);
-
-      &.on {
-        left: @margin;
-        opacity: 0;
-      }
-      &.off {
-        right: @margin;
-        opacity: 1;
+        &.off {
+          right: @margin;
+          opacity: 1;
+        }
       }
     }
   }
+
   .google-webfonts {
     .demotext {
       padding: 25px;

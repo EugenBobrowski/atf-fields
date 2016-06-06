@@ -269,21 +269,18 @@ if (!class_exists('AtfHtmlHelper')) {
 
         public static function tumbler($args = array())
         {
-            $on = '';
-            if (!empty($args['value'])) {
-                $on = 'on';
-            }
             if (empty($args['name'])) {
                 $args['name'] = $args['id'];
             }
-            $result = '<a class="' . esc_attr('on-off-box ' . $on) . '" href="#">';
+
+            $result = '<label class="tumbler-container">';
+            $result .= '<input type="checkbox" class="on" name="' . esc_attr($args['name']) . '" value="1"  ' . checked($args['value'], '1', false) . ' >';
+            $result .= '<span class="on-off-box">';
             $result .= '<span class="tumbler"></span>';
             $result .= '<span class="text on">on</span>';
             $result .= '<span class="text off">off</span>';
-            $result .= '<input type="radio" class="on" name="' . esc_attr($args['name']) . '" value="1"  ' . checked($args['value'], '1', false) . ' >';
-            $result .= '<input type="radio" class="off" name="' . esc_attr($args['name']) . '" value="0" ' . checked($args['value'], '0', false) . ' >';
-            $result .= '<span class="text off">off</span>';
-            $result .= '</a>';
+            $result .= '</span>';
+            $result .= '</label>';
 
             if (isset($args['desc'])) {
                 $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
@@ -316,10 +313,9 @@ if (!class_exists('AtfHtmlHelper')) {
 
         }
 
-        public static function multiselect ($args) {
-            $args = wp_parse_args($args, array(
-
-            ));
+        public static function multiselect($args)
+        {
+            $args = wp_parse_args($args, array());
             $result = '<select ' .
                 'multiple="multiple" ' .
                 'name="' . esc_attr($args['name'] . '[]') . '"' .

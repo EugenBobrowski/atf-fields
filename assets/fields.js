@@ -133,22 +133,6 @@
             }
         );
 
-        $('.on-off-box').click(
-            function () {
-                var $this = $(this);
-                if ($this.hasClass('on')) {
-                    $this.removeClass('on');
-                    $this.find("input").removeAttr('checked');
-                    $this.find("input.off").attr('checked', "checked");
-                } else {
-                    $this.addClass('on');
-                    $this.find("input").removeAttr('checked');
-                    $this.find("input.on").attr('checked', "checked");
-
-                }
-                return false;
-            }
-        );
         $(".color-picker-hex").wpColorPicker();
 
         if ($('.set_custom_images').length > 0) {
@@ -208,17 +192,29 @@
     };
 
     $.fn.resetRow = function () {
+        var rowId = uniqid();
         $(this).find('td').each(function () {
             var $td = $(this);
+
             if ($td.data('field-name-template') != undefined) {
+
+                var template = $td.data('field-name-template').replace(new RegExp("#",'g'), rowId);
 
                 if ($td.data('field-type') == 'addMedia') {
                     $td.removeMedia();
                 } else {
-                    console.log($td);
+                    // console.log($td);
                 }
-                console.log($td.data('field-name-template').replace('#', uniqid()));
-                $td.find('input, select').attr('name', $td.data('field-name-template').replace('#', uniqid())).val('');
+                // console.log(template);
+                $td.find('.chosen-select').css('display','block').next().remove();
+                $td.find('input, select')
+                    .attr('id', uniqid())
+                    .attr('name', template)
+
+                    .val('');
+                // $td.append(template);
+                // $td.find('.chosen-select').chosen();
+                template = '';
             }
 
 
