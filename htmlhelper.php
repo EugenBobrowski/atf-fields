@@ -579,3 +579,25 @@ if (!class_exists('AtfHtmlHelper')) {
     }
 
 }
+
+if (!function_exists('sanityze_atf_fields')) {
+    function sanitize_atf_fields ( $value, $type ) {
+        if (is_array($type)) {
+            if (!empty($type['type'])) $type = $type['type'];
+            else return false;
+        } 
+        switch ($type) {
+            case 'text':
+                return sanitize_text_field($value);
+                break;
+            case 'media':
+                return esc_url_raw($value);
+                break;
+            default:
+                return sanitize_text_field($value);
+                break;
+
+        }
+
+    }
+}
