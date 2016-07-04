@@ -2,12 +2,13 @@
 	"use strict";
 
 
-    var $optionsPanel, custom_file_frame, $radioImages;
+    var $optionsPanel, custom_file_frame, $radioImages, $upload;
 
     $(document).ready(function () {
 
         $optionsPanel = $('.atf-fields');
         $radioImages = $('.radio-image');
+        $upload = $('.upload-field');
 
         $optionsPanel.find('.chosen-select').chosen();
 
@@ -165,7 +166,39 @@
                 });
             }
         }
-        ;
+        if ($upload.length > 0) {
+            upload();
+        }
+        
+    });
+
+    var upload = function () {
+        var $field = $upload.find('input');
+        var $list = $upload.find ('ul');
+
+        $optionsPanel.on('change', '.upload-field input', function (e) {
+            var $this = $(this);
+            var files = $this.get(0).files;
+            var $list = $this.parents('.upload-field').find('ul');
+            $list.html('');
+
+            for (var i = 0, numFiles = files.length; i < numFiles; i++) {
+                var file = files[i];
+                $list.append('<li><span class="dashicons dashicons-media-default"></span> ' + file.name + ' </li>')
+
+            }
+            console.log();
+        });
+    };
+
+    $.fn.extend({
+        emptyAtfUpload: function () {
+            var $this = $(this);
+            $this.val('');
+            $this.parents('.upload-field').find('.file-list').find('li').hide('slow', function () {
+                $(this).remove();
+            });
+        }
     });
 
 

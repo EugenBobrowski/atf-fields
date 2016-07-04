@@ -151,7 +151,27 @@ if (!class_exists('AtfHtmlHelper')) {
             echo $result;
         }
 
+        public static function upload($args = array()) {
+            $args = wp_parse_args($args, array(
+                'multiple' => false,
+				'accept' => '*'
+            ));
+            if (!isset($args['id'])) $args['id'] = uniqid('upload');
+            if (!isset($args['label'])) $args['label'] = __('Choose a file', 'atf-fields');
 
+            ?>
+			<div class="upload-field">
+				<ul class="file-list">
+				</ul>
+				<label for="<?php echo $args['id']; ?>" class="button button-default upload-label">
+					<?php _e('Upload CSV'); ?>
+					<input id="<?php echo $args['id']; ?>" type="file" name="subscribers_base" <?php echo ($args['multiple']) ? 'multiple' : ''; ?> accept="<?php echo $args['accept']; ?>"></label>
+
+			</div>
+			
+            <?php
+
+        }
         /**
          * @param array $args
          */
