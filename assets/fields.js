@@ -153,6 +153,10 @@
         if ($upload.length > 0) {
             upload();
         }
+
+        jQuery('.atf-datepicker').datepicker({
+            dateFormat : 'dd-mm-yy'
+        });
         
     });
 
