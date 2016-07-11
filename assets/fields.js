@@ -1,55 +1,60 @@
-(function ( $ ) {
-	"use strict";
+(function ($) {
+    "use strict";
 
 
-    var $optionsPanel, custom_file_frame, $radioImages;
+    var $atfFields, custom_file_frame = {}, $radioImages;
 
     $(document).ready(function () {
 
-        $optionsPanel = $('.atf-fields');
+        $atfFields = $('.atf-fields');
         $radioImages = $('.radio-image');
 
-        $optionsPanel.find('.chosen-select').chosen();
+        $atfFields.find('.chosen-select').chosen();
 
-        $optionsPanel.find('.uploader').find("img[src='']").attr("src", atf_html_helper.url);
+        $atfFields.find('.uploader').find("img[src='']").attr("src", atf_html_helper.url);
 
-        $optionsPanel.on('click', ".atf-options-upload", function (event) {
-            var activeFileUploadContext = $(this).parent();
+        $atfFields.on('click', ".atf-options-upload", function (event) {
+            var $this = $(this);
+            var activeFileUploadContext = $this.parent();
+            var type = (activeFileUploadContext.hasClass('file')) ? 'file' : 'image';
 
             event.preventDefault();
 
+
             // If the media frame already exists, reopen it.
-            if ( typeof(custom_file_frame)!=="undefined" ) {
-             custom_file_frame.open();
-             return;
-             }
+            if (typeof(custom_file_frame[type]) !== "undefined") {
+                // console.log(custom_file_frame);
+                custom_file_frame[type].open();
+                return;
+            }
 
             // if its not null, its broking custom_file_frame's onselect "activeFileUploadContext"
-            custom_file_frame = null;
+            custom_file_frame[type] = null;
 
             // Create the media frame.
-            custom_file_frame = wp.media.frames.customHeader = wp.media({
+
+
+            custom_file_frame[type] = wp.media.frames.customHeader = wp.media({
                 // Set the title of the modal.
-                title: $(this).data("choose"),
+                title: $this.data("choose"),
 
                 // Tell the modal to show only images. Ignore if want ALL
-                library: {
-                    type: 'image'
-                },
+                library: (activeFileUploadContext.hasClass('file')) ? {} : { type: 'image' },
                 // Customize the submit button.
                 button: {
                     // Set the text of the button.
-                    text: $(this).data("update")
+                    text: $this.data("update")
                 }
             });
 
-            custom_file_frame.on("select", function () {
+            custom_file_frame[type].on("select", function () {
                 // Grab the selected attachment.
-                var attachment = custom_file_frame.state().get("selection").first();
+                var attachment = custom_file_frame[type].state().get("selection").first();
+                console.log(attachment);
 
                 // Update value of the targetfield input with the attachment url.
 
-                $('.atf-options-upload-screenshot', activeFileUploadContext).attr('src', attachment.attributes.url);
+                $('.atf-options-upload-screenshot', activeFileUploadContext).attr('src', (attachment.attributes.type == 'image') ? attachment.attributes.url : attachment.attributes.icon);
                 activeFileUploadContext.find('input').val(attachment.attributes.url).trigger('change');
 
                 $('.atf-options-upload', activeFileUploadContext).hide();
@@ -57,15 +62,15 @@
                 $('.atf-options-upload-remove', activeFileUploadContext).show();
             });
 
-            custom_file_frame.open();
+            custom_file_frame[type].open();
         });
 
-        $optionsPanel.on('click', '.atf-options-upload-remove', function (event) {
+        $atfFields.on('click', '.atf-options-upload-remove', function (event) {
             event.preventDefault();
             $(this).parent().removeMedia();
         });
 
-        $optionsPanel.find('.atf-options-group').sortable({
+        $atfFields.find('.atf-options-group').sortable({
             items: "tr.row",
             handle: '.group-row-id',
             opacity: 0.5,
@@ -74,7 +79,7 @@
             helper: 'clone'
         });
 
-        $optionsPanel.on('click', '.btn-control-group', function (e) {
+        $atfFields.on('click', '.btn-control-group', function (e) {
             e.preventDefault();
             var $this = $(this);
             var $thisRow = $this.parents('.row');
@@ -153,7 +158,6 @@
     });
 
 
-
     //googlefonts
 
     $('.google-webfonts').each(function () {
@@ -198,7 +202,7 @@
 
             if ($td.data('field-name-template') != undefined) {
 
-                var template = $td.data('field-name-template').replace(new RegExp("#",'g'), rowId);
+                var template = $td.data('field-name-template').replace(new RegExp("#", 'g'), rowId);
 
                 if ($td.data('field-type') == 'addMedia') {
                     $td.removeMedia();
@@ -206,7 +210,7 @@
                     // console.log($td);
                 }
                 // console.log(template);
-                $td.find('.chosen-select').css('display','block').next().remove();
+                $td.find('.chosen-select').css('display', 'block').next().remove();
                 $td.find('input, select')
                     .attr('id', uniqid())
                     .attr('name', template)

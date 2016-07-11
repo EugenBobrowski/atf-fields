@@ -155,38 +155,45 @@ if (!class_exists('AtfHtmlHelper')) {
         /**
          * @param array $args
          */
-        public static function media($args = array())
-        {
-            $default = array(
-                'value' => '',
-                'class' => 'regular-text',
-                'addClass' => '',
-            );
+		public static function media($args = array())
+		{
+			$default = array(
+				'value' => '',
+				'class' => 'regular-text',
+				'addClass' => '',
+				'file' => false
+			);
 
-            $args = wp_parse_args($args, $default);
+			$args = wp_parse_args($args, $default);
+			if ($args['value'] == '') {
+				$remove = ' style="display:none;"';
+				$upload = '';
+			} else {
+				$remove = '';
+				$upload = ' style="display:none;"';
+			}
+			?>
+			<div class="uploader <?php echo ($args['file']) ? 'file' : ''; ?>">
+				<input type="hidden" id="<?php echo esc_attr($args['id']); ?>"
+					   name="<?php echo esc_attr($args['name']); ?>"
+					   value="<?php echo esc_url($args['value']); ?>"
+					   class="<?php echo esc_attr($args['class'] . $args['addClass']); ?>"/>
+				<img class="atf-options-upload-screenshot" id="<?php echo esc_attr('screenshot-' . $args['id']); ?>"
+					 src="<?php echo esc_url($args['value']); ?>"/>
 
-            $result = '<div class="uploader">';
-            $result .= '<input type="hidden" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_url($args['value']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" />';
-            $result .= '<img class="atf-options-upload-screenshot" id="' . esc_attr('screenshot-' . $args['id']) . '" src="' . esc_url($args['value']) . '" />';
-            if ($args['value'] == '') {
-                $remove = ' style="display:none;"';
-                $upload = '';
-            } else {
-                $remove = '';
-                $upload = ' style="display:none;"';
-            }
-            $result .= ' <a data-update="Select File" data-choose="Choose a File" href="javascript:void(0);" class="atf-options-upload button-secondary"' . $upload . ' rel-id="' . esc_attr($args['id']) . '">' . __('Upload', 'atf') . '</a>';
-            $result .= ' <a href="javascript:void(0);" class="atf-options-upload-remove  button-secondary"' . esc_attr($remove) . ' rel-id="' . esc_attr($args['id']) . '">' . __('Remove Upload', 'atf') . '</a>';
-            $result .= '</div>';
+				<a data-update="Select File"
+				   data-choose="Choose a File"
+				   href="javascript:void(0);"
+				   class="atf-options-upload button-secondary" <?php echo $upload; ?>
+				   rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Upload', 'atf'); ?></a>
+				<a href="javascript:void(0);"
+				   class="atf-options-upload-remove  button-secondary"<?php echo esc_attr($remove); ?>
+				   rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Remove Upload', 'atf'); ?></a>
+			</div>
 
+			<?php if (isset($args['desc'])) echo '<p class="description">' . esc_html($args['desc']) . '</p>';
 
-            if (isset($args['desc'])) {
-                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
-            }
-
-            echo $result;
-
-        }
+		}
 
         /**
          * @param array $args
@@ -585,7 +592,7 @@ if (!function_exists('sanityze_atf_fields')) {
         if (is_array($type)) {
             if (!empty($type['type'])) $type = $type['type'];
             else return false;
-        } 
+        }
         switch ($type) {
             case 'text':
                 return sanitize_text_field($value);
