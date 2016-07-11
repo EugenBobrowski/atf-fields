@@ -200,37 +200,45 @@ if (!class_exists('AtfHtmlHelper')) {
          */
 		public static function media($args = array())
 		{
-			$default = array(
-				'value' => '',
-				'class' => 'regular-text',
-				'addClass' => '',
-				'file' => false
-			);
 
-			$args = wp_parse_args($args, $default);
-			if ($args['value'] == '') {
+			$args = wp_parse_args($args, array(
+                'value' => '',
+                'class' => 'regular-text',
+                'addClass' => '',
+                'file' => false,
+                'show_link' => false,
+            ));
+			if (empty($args['value'])) {
+                $screenshot = ' style="display:none;"';
 				$remove = ' style="display:none;"';
 				$upload = '';
 			} else {
+                $screenshot = '';
 				$remove = '';
 				$upload = ' style="display:none;"';
 			}
+            if ($args['file']) {
+                $src = includes_url('images/media/document.png');
+            } else {
+                $src = $args['value'];
+            }
+
+
 			?>
 			<div class="uploader <?php echo ($args['file']) ? 'file' : ''; ?>">
-				<input type="hidden" id="<?php echo esc_attr($args['id']); ?>"
+                <img class="atf-options-upload-screenshot" id="<?php echo esc_attr('screenshot-' . $args['id']); ?>"
+                     src="<?php echo esc_url($src); ?>" <?php echo $screenshot; ?>/>
+				<input type="<?php echo ($args['show_link']) ? 'text' : 'hidden'; ?>" id="<?php echo esc_attr($args['id']); ?>"
 					   name="<?php echo esc_attr($args['name']); ?>"
 					   value="<?php echo esc_url($args['value']); ?>"
 					   class="<?php echo esc_attr($args['class'] . $args['addClass']); ?>"/>
-				<img class="atf-options-upload-screenshot" id="<?php echo esc_attr('screenshot-' . $args['id']); ?>"
-					 src="<?php echo esc_url($args['value']); ?>"/>
-
 				<a data-update="Select File"
 				   data-choose="Choose a File"
 				   href="javascript:void(0);"
 				   class="atf-options-upload button-secondary" <?php echo $upload; ?>
 				   rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Upload', 'atf'); ?></a>
 				<a href="javascript:void(0);"
-				   class="atf-options-upload-remove  button-secondary"<?php echo esc_attr($remove); ?>
+				   class="atf-options-upload-remove  button-secondary"<?php echo $remove; ?>
 				   rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Remove Upload', 'atf'); ?></a>
 			</div>
 
