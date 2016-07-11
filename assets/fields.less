@@ -1,5 +1,6 @@
 @import "mixins";
 @import "chosen";
+@import "jquery-ui";
 
 .wrap {
 
@@ -343,6 +344,42 @@
       }
     }
   }
+
+  .upload-field {
+    ul {
+      margin: 0;
+    }
+    .dashicons {
+
+      vertical-align: middle;
+      &.dashicons-media-default {
+        height: 40px;
+        width: 40px;
+        font-size: 40px;
+        line-height: 40px;
+      }
+      &.dashicons-dashicons-dismiss {
+        height: 15px;
+        width: 15px;
+        font-size: 15px;
+        line-height: 15px;
+
+
+      }
+    }
+    label {
+      position: relative;
+      input {
+        position: absolute;
+        top: -50px;
+        width: 0;
+        height: 0;
+        visibility: hidden;
+      }
+    }
+
+  }
+
   &.form-table {
     #side-sortables & {
       width: 100%;

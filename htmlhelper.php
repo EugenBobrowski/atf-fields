@@ -12,6 +12,9 @@ if (!class_exists('AtfHtmlHelper')) {
 
             wp_enqueue_style('wp-color-picker');
 
+            wp_enqueue_script('jquery-ui-datepicker');
+//            wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
+
             wp_enqueue_media();
 
             //atf-fields
@@ -129,6 +132,26 @@ if (!class_exists('AtfHtmlHelper')) {
 
             echo $result;
         }
+        /**
+         * @param array $args
+         */
+        public static function datepicker($args = array())
+        {
+            $args = wp_parse_args($args, array(
+                'value' => '',
+                'class' => 'regular-text',
+                'addClass' => '',
+            ));
+
+            $result = '<input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="atf-datepicker ' . esc_attr($args['class'] . $args['addClass']) . '" />';
+            if (isset($args['desc'])) {
+                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
+            }
+
+            echo $result;
+        }
+
+
 
         /**
          * @param array $args
@@ -151,7 +174,27 @@ if (!class_exists('AtfHtmlHelper')) {
             echo $result;
         }
 
+        public static function upload($args = array()) {
+            $args = wp_parse_args($args, array(
+                'multiple' => false,
+				'accept' => '*'
+            ));
+            if (!isset($args['id'])) $args['id'] = uniqid('upload');
+            if (!isset($args['label'])) $args['label'] = __('Choose a file', 'atf-fields');
 
+            ?>
+			<div class="upload-field">
+				<ul class="file-list">
+				</ul>
+				<label for="<?php echo $args['id']; ?>" class="button button-default upload-label">
+					<?php _e('Upload CSV'); ?>
+					<input id="<?php echo $args['id']; ?>" type="file" name="subscribers_base" <?php echo ($args['multiple']) ? 'multiple' : ''; ?> accept="<?php echo $args['accept']; ?>"></label>
+
+			</div>
+			
+            <?php
+
+        }
         /**
          * @param array $args
          */
