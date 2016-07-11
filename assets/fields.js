@@ -169,7 +169,7 @@
         var $field = $upload.find('input');
         var $list = $upload.find ('ul');
 
-        $optionsPanel.on('change', '.upload-field input', function (e) {
+        $atfFields.on('change', '.upload-field input', function (e) {
             var $this = $(this);
             var files = $this.get(0).files;
             var $list = $this.parents('.upload-field').find('ul');
