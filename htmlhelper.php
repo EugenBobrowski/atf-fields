@@ -636,6 +636,9 @@ if (!function_exists('sanityze_atf_fields')) {
             case 'media':
                 return esc_url_raw($value);
                 break;
+            case 'editor':
+                return wp_kses_post($value);
+                break;
             default:
                 return sanitize_text_field($value);
                 break;
