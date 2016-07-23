@@ -274,6 +274,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
         public static function editor($args = array())
         {
+            if (!isset($args['options'])) $args['options'] = array();
             $default = array(
                 'value' => '',
                 'class' => 'regular-text',
@@ -297,11 +298,12 @@ if (!class_exists('AtfHtmlHelper')) {
                     'toolbar4' => '',
                 ),
             );
-            foreach ($default as $key => $value) {
-                if (!isset($args[$key])) {
-                    $args[$key] = $value;
-                }
-            }
+
+
+
+            $args['options'] = wp_parse_args($args['options'], $default['options']);
+            $args = wp_parse_args($args, $default);
+
             $args['options']['textarea_name'] = $args['name'];
             wp_editor(stripslashes($args['value']), $args['id'], $args['options']);
             if (isset($args['desc'])) {
