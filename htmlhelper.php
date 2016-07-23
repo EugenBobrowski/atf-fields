@@ -207,6 +207,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 'addClass' => '',
                 'file' => false,
                 'show_link' => false,
+                'preview_size' => '150px',
             ));
 			if (empty($args['value'])) {
                 $screenshot = ' style="display:none;"';
@@ -226,8 +227,11 @@ if (!class_exists('AtfHtmlHelper')) {
 
 			?>
 			<div class="uploader <?php echo ($args['file']) ? 'file' : ''; ?>">
-                <img class="atf-options-upload-screenshot" id="<?php echo esc_attr('screenshot-' . $args['id']); ?>"
-                     src="<?php echo esc_url($src); ?>" <?php echo $screenshot; ?>/>
+                <div class="atf-preview" style="<?php echo 'width: '. $args['preview_size'] . ';'; ?>">
+                    <img class="atf-options-upload-screenshot" id="<?php echo esc_attr('screenshot-' . $args['id']); ?>"
+                    src="<?php echo esc_url($src); ?>" <?php echo $screenshot; ?>/>
+                </div>
+
 				<input type="<?php echo ($args['show_link']) ? 'text' : 'hidden'; ?>" id="<?php echo esc_attr($args['id']); ?>"
 					   name="<?php echo esc_attr($args['name']); ?>"
 					   value="<?php echo esc_url($args['value']); ?>"
@@ -320,6 +324,7 @@ if (!class_exists('AtfHtmlHelper')) {
             $args = wp_parse_args($args, $default);
 
             $args['options']['textarea_name'] = $args['name'];
+
             wp_editor(stripslashes($args['value']), $args['id'], $args['options']);
             if (isset($args['desc'])) {
                 echo '<p class="description">' . esc_html($args['desc']) . '</p>';

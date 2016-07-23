@@ -2143,8 +2143,28 @@ button.ui-button::-moz-focus-inner {
   margin: 20px 0;
   background: #eeeeee;
 }
+.atf-fields .uploader .atf-preview {
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  -webkit-box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  background: #eeeeee;
+}
+.atf-fields .uploader .atf-preview:after {
+  content: '';
+  display: block;
+  padding-top: 100%;
+}
+.atf-fields .uploader .atf-preview img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-height: 100%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
 .atf-fields .uploader .atf-options-upload-screenshot {
-  max-width: 75%;
   box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
   -webkit-box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(0, 0, 0, 0.05);
   background: #eeeeee;
