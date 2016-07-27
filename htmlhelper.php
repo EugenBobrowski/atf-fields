@@ -463,18 +463,13 @@ if (!class_exists('AtfHtmlHelper')) {
 
         public static function radio($args = array())
         {
-            $default = array(
+
+            $args = wp_parse_args($args, $default = array(
                 'vertical' => true,
                 'value' => '',
                 'class' => '',
                 'addClass' => '',
-            );
-
-            foreach ($default as $key => $value) {
-                if (!isset($args[$key])) {
-                    $args[$key] = $value;
-                }
-            }
+            ));
 
             $result = '';
             $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
