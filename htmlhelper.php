@@ -20,7 +20,7 @@ if (!class_exists('AtfHtmlHelper')) {
             //atf-fields
             wp_enqueue_style('atf-fields-css', $url . 'assets/fields.css?prefix=' . $prefix, array(), '1.0', 'all');
             wp_enqueue_script('atf-options-js', $url . 'assets/fields.js?prefix=' . $prefix, array(
-                'jquery', 'wp-color-picker', 'ui-sortable', 'chosen-script'), '1.0', false);
+                'jquery', 'wp-color-picker', 'jquery-ui-sortable', 'chosen-script'), '1.0', false);
 
             wp_localize_script('atf-options-js', 'atf_html_helper', array('url' => $url . 'assets/blank.png'));
 
@@ -640,7 +640,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
 }
 
-if (!function_exists('sanityze_atf_fields')) {
+if (!function_exists('sanitize_atf_fields')) {
     function sanitize_atf_fields ( $value, $type ) {
         if (is_array($type)) {
             if (!empty($type['type'])) $type = $type['type'];
