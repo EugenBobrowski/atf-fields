@@ -53,7 +53,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 <tbody>
                 <?php
                 $i = 1;
-
+                if (empty($args['value']) || !is_array($args['value'])) $args['value'] = array(array());
                 foreach ($args['value'] as $row_key => $row_val) {
                     echo '<tr class="row">';
                     echo '<td class="group-row-id">' . $i . '</td>';
@@ -641,12 +641,12 @@ if (!class_exists('AtfHtmlHelper')) {
 }
 
 if (!function_exists('sanitize_atf_fields')) {
-    function sanitize_atf_fields ( $value, $type ) {
-        if (is_array($type)) {
-            if (!empty($type['type'])) $type = $type['type'];
-            else return false;
+    function sanitize_atf_fields ( $value, $field ) {
+
+        if (!is_array($field)) {
+            $field['type'] = $field;
         }
-        switch ($type) {
+        switch ($field['type']) {
             case 'text':
                 return sanitize_text_field($value);
                 break;
@@ -655,6 +655,18 @@ if (!function_exists('sanitize_atf_fields')) {
                 break;
             case 'editor':
                 return wp_kses_post($value);
+                break;
+            case 'group':
+                $group_data = array();
+                foreach ($value as $row) {
+                    $row_data = array();
+                    foreach ($field['items'] as $key=>$subfield) {
+                        $row_data[$key] = sanitize_atf_fields($row[$key], $subfield);
+                    }
+                    $group_data[] = $row_data; var_dump($row_data);
+                }
+                return $group_data;
+
                 break;
             default:
                 return sanitize_text_field($value);
