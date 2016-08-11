@@ -32,11 +32,13 @@ if (!class_exists('AtfHtmlHelper')) {
          */
         public static function group($args = array())
         {
-
+            $args = wp_parse_args($args, array(
+                'vertical' => false,
+            ))
             ?>
 
 
-            <table class="form-table atf-options-group">
+            <table class="form-table atf-options-group <?php echo ($args['vertical']) ? 'vertical' : ''; ?>">
                 <thead>
                 <tr>
                     <th class="group-row-id">#</th>
@@ -74,6 +76,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
                         echo '<td '
                             . 'style="' . $item['cell_style'] . '"'
+                            . 'data-label="' . esc_attr($item['title']) . '" '
                             . 'data-field-type="' . esc_attr($item['type']) . '" '
                             . 'data-field-name-template="' . esc_attr($args['name'] . '[#][' . $item['id'] . ']') . '">';
                         $item['id'] = $item['uniqid'];

@@ -357,6 +357,55 @@
         border-color: #ffffff;
       }
     }
+    &.vertical {
+      width: 100%;
+      thead, tfoot {
+        display: none;
+      }
+      tr {
+        display: block;
+        border: 1px solid #ddd;
+        margin: 0;
+        padding: 0 0 0 40px;
+        position: relative;
+        & + tr {
+          border-top: none;
+        }
+        .group-row-id, .group-row-controls {
+          margin: 0;
+        }
+        .group-row-id {
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 40px;
+        }
+        .group-row-controls {
+          text-align: center;
+          padding: 0 10px 10px;
+          background: transparent;
+        }
+        th, td {
+          display: block;
+          padding: 10px;
+          width: 100%;
+          border: none;
+          margin: 0;
+
+          select, .regular-text {
+            width: 100%
+          }
+
+        }
+        td {
+          &:before {
+            content: attr(data-label);
+            font-weight: bold;
+          }
+        }
+      }
+    }
   }
 
   .upload-field {

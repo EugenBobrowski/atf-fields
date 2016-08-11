@@ -2218,6 +2218,57 @@ button.ui-button::-moz-focus-inner {
   color: #ffffff;
   border-color: #ffffff;
 }
+.atf-fields .atf-options-group.vertical {
+  width: 100%;
+}
+.atf-fields .atf-options-group.vertical thead,
+.atf-fields .atf-options-group.vertical tfoot {
+  display: none;
+}
+.atf-fields .atf-options-group.vertical tr {
+  display: block;
+  border: 1px solid #ddd;
+  margin: 0;
+  padding: 0 0 0 40px;
+  position: relative;
+}
+.atf-fields .atf-options-group.vertical tr + tr {
+  border-top: none;
+}
+.atf-fields .atf-options-group.vertical tr .group-row-id,
+.atf-fields .atf-options-group.vertical tr .group-row-controls {
+  margin: 0;
+}
+.atf-fields .atf-options-group.vertical tr .group-row-id {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+}
+.atf-fields .atf-options-group.vertical tr .group-row-controls {
+  text-align: center;
+  padding: 0 10px 10px;
+  background: transparent;
+}
+.atf-fields .atf-options-group.vertical tr th,
+.atf-fields .atf-options-group.vertical tr td {
+  display: block;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  margin: 0;
+}
+.atf-fields .atf-options-group.vertical tr th select,
+.atf-fields .atf-options-group.vertical tr td select,
+.atf-fields .atf-options-group.vertical tr th .regular-text,
+.atf-fields .atf-options-group.vertical tr td .regular-text {
+  width: 100%;
+}
+.atf-fields .atf-options-group.vertical tr td:before {
+  content: attr(data-label);
+  font-weight: bold;
+}
 .atf-fields .upload-field ul {
   margin: 0;
 }
