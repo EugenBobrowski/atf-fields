@@ -80,7 +80,7 @@ if (!class_exists('AtfHtmlHelper')) {
                             . 'data-field-type="' . esc_attr($item['type']) . '" '
                             . 'data-field-name-template="' . esc_attr($args['name'] . '[#][' . $item['id'] . ']') . '">';
                         $item['id'] = $item['uniqid'];
-                        echo self::$item['type']($item);
+                        call_user_func(array(__CLASS__, $item['type'] ), $item);
                         echo '</td>';
 
 
