@@ -341,8 +341,13 @@ if (!class_exists('AtfHtmlHelper')) {
                 $args['name'] = $args['id'];
             }
 
-            $result = '<label class="tumbler-container">';
-            $result .= '<input type="checkbox" class="on" name="' . esc_attr($args['name']) . '" value="1"  ' . checked($args['value'], '1', false) . ' >';
+            $args = wp_parse_args($args, array(
+                'true' => true,
+                'false' => false,
+            ));
+            $result = '<input type="hidden" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['false']) . '" >';
+            $result .= '<label class="tumbler-container">';
+            $result .= '<input type="checkbox" class="on" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['true']) . '"  ' . checked($args['value'], $args['true'], false) . ' >';
             $result .= '<span class="on-off-box">';
             $result .= '<span class="tumbler"></span>';
             $result .= '<span class="text on">on</span>';
