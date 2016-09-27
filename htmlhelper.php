@@ -27,6 +27,42 @@ if (!class_exists('AtfHtmlHelper')) {
 
         }
 
+        public static function table($fields)
+        {
+            ?>
+            <table class="form-table atf-fields">
+                <tbody>
+                <?php
+                foreach ($fields as $key => $field) {
+
+                    $field = wp_parse_args($field, array(
+                        'id' => $key,
+                        'name' => $key,
+                        'type' => 'text',
+                        'default' => '',
+                    ));
+
+                    $field['value'] = (isset ($data[$key])) ? $data[$key] : $field['default'];
+
+
+                    ?>
+                    <tr>
+                        <th scope="row">
+                            <label for="<?php echo $field['id']; ?>"><?php echo $field['title'] ?></label>
+                        </th>
+                        <td>
+                            <?php call_user_func(array(__CLASS__, $field['type']), $field); ?>
+                        </td>
+                    </tr>
+                    <?php
+                }
+                ?>
+
+                </tbody>
+            </table>
+            <?php
+        }
+
         /**
          * @param array $args
          */
@@ -177,34 +213,38 @@ if (!class_exists('AtfHtmlHelper')) {
             echo $result;
         }
 
-        public static function upload($args = array()) {
+        public static function upload($args = array())
+        {
             $args = wp_parse_args($args, array(
                 'multiple' => false,
-				'accept' => '*'
+                'accept' => '*'
             ));
             if (!isset($args['id'])) $args['id'] = uniqid('upload');
             if (!isset($args['label'])) $args['label'] = __('Choose a file', 'atf-fields');
 
             ?>
-			<div class="upload-field">
-				<ul class="file-list">
-				</ul>
-				<label for="<?php echo $args['id']; ?>" class="button button-default upload-label">
-					<?php _e('Upload CSV'); ?>
-					<input id="<?php echo $args['id']; ?>" type="file" name="subscribers_base" <?php echo ($args['multiple']) ? 'multiple' : ''; ?> accept="<?php echo $args['accept']; ?>"></label>
+            <div class="upload-field">
+                <ul class="file-list">
+                </ul>
+                <label for="<?php echo $args['id']; ?>" class="button button-default upload-label">
+                    <?php _e('Upload CSV'); ?>
+                    <input id="<?php echo $args['id']; ?>" type="file"
+                           name="subscribers_base" <?php echo ($args['multiple']) ? 'multiple' : ''; ?>
+                           accept="<?php echo $args['accept']; ?>"></label>
 
-			</div>
-			
+            </div>
+
             <?php
 
         }
+
         /**
          * @param array $args
          */
-		public static function media($args = array())
-		{
+        public static function media($args = array())
+        {
 
-			$args = wp_parse_args($args, array(
+            $args = wp_parse_args($args, array(
                 'value' => '',
                 'class' => 'regular-text',
                 'addClass' => '',
@@ -212,15 +252,15 @@ if (!class_exists('AtfHtmlHelper')) {
                 'show_link' => false,
                 'preview_size' => '150px',
             ));
-			if (empty($args['value'])) {
+            if (empty($args['value'])) {
                 $screenshot = ' style="display:none;"';
-				$remove = ' style="display:none;"';
-				$upload = '';
-			} else {
+                $remove = ' style="display:none;"';
+                $upload = '';
+            } else {
                 $screenshot = '';
-				$remove = '';
-				$upload = ' style="display:none;"';
-			}
+                $remove = '';
+                $upload = ' style="display:none;"';
+            }
             if ($args['file']) {
                 $src = includes_url('images/media/document.png');
             } else {
@@ -228,30 +268,31 @@ if (!class_exists('AtfHtmlHelper')) {
             }
 
 
-			?>
-			<div class="uploader <?php echo ($args['file']) ? 'file' : ''; ?>">
-                <div class="atf-preview" style="<?php echo 'width: '. $args['preview_size'] . ';'; ?>">
+            ?>
+            <div class="uploader <?php echo ($args['file']) ? 'file' : ''; ?>">
+                <div class="atf-preview" style="<?php echo 'width: ' . $args['preview_size'] . ';'; ?>">
                     <img class="atf-options-upload-screenshot" id="<?php echo esc_attr('screenshot-' . $args['id']); ?>"
-                    src="<?php echo esc_url($src); ?>" <?php echo $screenshot; ?>/>
+                         src="<?php echo esc_url($src); ?>" <?php echo $screenshot; ?>/>
                 </div>
 
-				<input type="<?php echo ($args['show_link']) ? 'text' : 'hidden'; ?>" id="<?php echo esc_attr($args['id']); ?>"
-					   name="<?php echo esc_attr($args['name']); ?>"
-					   value="<?php echo esc_url($args['value']); ?>"
-					   class="<?php echo esc_attr($args['class'] . $args['addClass']); ?>"/>
-				<a data-update="Select File"
-				   data-choose="Choose a File"
-				   href="javascript:void(0);"
-				   class="atf-options-upload button-secondary" <?php echo $upload; ?>
-				   rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Upload', 'atf'); ?></a>
-				<a href="javascript:void(0);"
-				   class="atf-options-upload-remove  button-secondary"<?php echo $remove; ?>
-				   rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Remove Upload', 'atf'); ?></a>
-			</div>
+                <input type="<?php echo ($args['show_link']) ? 'text' : 'hidden'; ?>"
+                       id="<?php echo esc_attr($args['id']); ?>"
+                       name="<?php echo esc_attr($args['name']); ?>"
+                       value="<?php echo esc_url($args['value']); ?>"
+                       class="<?php echo esc_attr($args['class'] . $args['addClass']); ?>"/>
+                <a data-update="Select File"
+                   data-choose="Choose a File"
+                   href="javascript:void(0);"
+                   class="atf-options-upload button-secondary" <?php echo $upload; ?>
+                   rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Upload', 'atf'); ?></a>
+                <a href="javascript:void(0);"
+                   class="atf-options-upload-remove  button-secondary"<?php echo $remove; ?>
+                   rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Remove Upload', 'atf'); ?></a>
+            </div>
 
-			<?php if (isset($args['desc'])) echo '<p class="description">' . esc_html($args['desc']) . '</p>';
+            <?php if (isset($args['desc'])) echo '<p class="description">' . esc_html($args['desc']) . '</p>';
 
-		}
+        }
 
         /**
          * @param array $args
@@ -320,7 +361,6 @@ if (!class_exists('AtfHtmlHelper')) {
                     'toolbar4' => '',
                 ),
             );
-
 
 
             $args['options'] = wp_parse_args($args['options'], $default['options']);
@@ -641,7 +681,6 @@ if (!class_exists('AtfHtmlHelper')) {
         public static function onOffBox($args = array())
         {
             self::tumbler($args);
-
         }
 
     }
@@ -649,7 +688,8 @@ if (!class_exists('AtfHtmlHelper')) {
 }
 
 if (!function_exists('sanitize_atf_fields')) {
-    function sanitize_atf_fields ( $value, $field ) {
+    function sanitize_atf_fields($value, $field)
+    {
 
         if (!is_array($field)) {
             $field['type'] = $field;
@@ -668,10 +708,11 @@ if (!function_exists('sanitize_atf_fields')) {
                 $group_data = array();
                 foreach ($value as $row) {
                     $row_data = array();
-                    foreach ($field['items'] as $key=>$subfield) {
+                    foreach ($field['items'] as $key => $subfield) {
                         $row_data[$key] = sanitize_atf_fields($row[$key], $subfield);
                     }
-                    $group_data[] = $row_data; var_dump($row_data);
+                    $group_data[] = $row_data;
+                    var_dump($row_data);
                 }
                 return $group_data;
 
