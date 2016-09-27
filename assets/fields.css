@@ -2026,6 +2026,9 @@ button.ui-button::-moz-focus-inner {
   width: 25em;
   max-width: 100%;
 }
+.atf-fields .inline-block {
+  display: inline-block;
+}
 .atf-fields .check-buttons label {
   display: inline-block;
   padding: 4px 8px;
