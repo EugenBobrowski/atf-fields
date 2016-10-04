@@ -27,7 +27,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
         }
 
-        public static function table($fields)
+        public static function table($fields, $data = array())
         {
             ?>
             <table class="form-table atf-fields">
