@@ -161,10 +161,12 @@ if (!class_exists('AtfHtmlHelper')) {
             $args = wp_parse_args($args, array(
                 'value' => '',
                 'class' => 'regular-text',
-                'addClass' => '',
+                'add_class' => '',
+                'after' => ''
             ));
 
-            $result = '<input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" />';
+            $result = '<input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['add_class']) . '" /> ' . $args['after'];
+
             if (isset($args['desc'])) {
                 $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
             }
