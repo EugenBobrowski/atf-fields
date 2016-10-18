@@ -173,6 +173,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
             echo $result;
         }
+
         /**
          * @param array $args
          */
@@ -191,7 +192,6 @@ if (!class_exists('AtfHtmlHelper')) {
 
             echo $result;
         }
-
 
 
         /**
@@ -428,9 +428,11 @@ if (!class_exists('AtfHtmlHelper')) {
 
         }
 
-        public static function multiselect($args)
+        public static function chosen($args)
         {
-            $args = wp_parse_args($args, array());
+            $args = wp_parse_args($args, array(
+                'multiple'
+            ));
             $result = '<select ' .
                 'multiple="multiple" ' .
                 'name="' . esc_attr($args['name'] . '[]') . '"' .
@@ -629,6 +631,15 @@ if (!class_exists('AtfHtmlHelper')) {
             echo 'info';
         }
 
+
+        /**
+         * @deprecated
+         * @param array $args
+         */
+        public static function multiselect($args)
+        {
+            self::chosen($args);
+        }
 
         /**
          * @deprecated
