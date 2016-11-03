@@ -517,7 +517,14 @@ if (!class_exists('AtfHtmlHelper')) {
                 'value' => '',
                 'class' => '',
                 'addClass' => '',
+                'attributes' => array(),
             ));
+
+            $attributes = ' ';
+
+            foreach ($args['attributes'] as $attr_key => $attr_val) {
+                $attributes .= $attr_key . '="' . $attr_val . '" ';
+            }
 
             $result = '';
             $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
@@ -530,6 +537,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
                 $result .= '<input type="radio"'
                     . ' id="' . $id . '"'
+                    . $attributes
                     . ' name="' . esc_attr($args['name']) . '" value="' . esc_attr($value) . '" ' . checked($args['value'], $value, false) . ' />';
                 $result .= ' <label for="' . $id . '">' . $label . '</label> ';
                 if ($args['vertical']) $result .= '<br />';
