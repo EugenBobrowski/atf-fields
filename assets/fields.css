@@ -2014,6 +2014,9 @@ button.ui-button::-moz-focus-inner {
 .atf-fields * {
   box-sizing: border-box;
 }
+.atf-fields .inline-block {
+  display: inline-block;
+}
 .atf-fields .customize-control-content,
 .atf-fields .editor-wrap,
 .atf-fields .wp-switch-editor,
@@ -2025,9 +2028,6 @@ button.ui-button::-moz-focus-inner {
 .atf-fields select {
   width: 25em;
   max-width: 100%;
-}
-.atf-fields .inline-block {
-  display: inline-block;
 }
 .atf-fields .check-buttons label {
   display: inline-block;
@@ -2054,7 +2054,7 @@ button.ui-button::-moz-focus-inner {
   color: #fff;
 }
 .atf-fields .check-buttons img {
-  border: 5px solid #eee;
+  display: block;
 }
 .atf-fields .radio-image label {
   display: block;
