@@ -66,6 +66,76 @@ if (!class_exists('AtfHtmlHelper')) {
         /**
          * @param array $args
          */
+        public static function group_items($args = array())
+        {
+            $args = wp_parse_args($args, array(
+                'vertical' => false,
+            ))
+            ?>
+
+            <div class="atf-options-group <?php echo ($args['vertical']) ? 'vertical' : ''; ?>">
+                <?php
+                $i = 1;
+                if (empty($args['value']) || !is_array($args['value'])) $args['value'] = array(array());
+                foreach ($args['value'] as $row_key => $row_val) {
+
+                    ?>
+                    <div class="row">
+                        <div class="header">
+                            <div class="group-row-id"><?php echo $i ?></div>
+                        </div>
+
+                        <?php
+
+                        AtfHtmlHelper::table($args['items'], $row_val, array(
+                            'name_prefix' => $args['name'] . '[' . $row_key . ']',
+                        ));
+
+                        foreach ($args['items'] as $key => $item) {
+                            $item['id'] = $key;
+                            $item['desc'] = null;
+                            $item['uniqid'] = uniqid($item['id']);
+
+
+
+                            if (!isset($row_val[$item['id']])) {
+                                $item['value'] = '';
+                            } else {
+                                $item['value'] = $row_val[$item['id']];
+                            }
+                            if (!isset($item['cell_style'])) $item['cell_style'] = '';
+
+
+//                            echo '<td '
+//                                . 'style="' . $item['cell_style'] . '"'
+//                                . 'data-label="' . esc_attr($item['title']) . '" '
+//                                . 'data-field-type="' . esc_attr($item['type']) . '" '
+//                                . 'data-field-name-template="' . esc_attr($args['name'] . '[#][' . $item['id'] . ']') . '">';
+//                            $item['id'] = $item['uniqid'];
+//                            call_user_func(array(__CLASS__, $item['type']), $item);
+
+                        }
+                        ?>
+                        <div class="group-row-controls">
+                            <a class="button button-primary btn-control-group plus" href="#">+</a>
+                            <a class=" btn-control-group minus" href="#"><?php _e('Delete'); ?></a>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+
+                    <?php $i++;
+                }
+
+                ?>
+            </div>
+
+
+            <?php
+        }
+
+        /**
+         * @param array $args
+         */
         public static function group($args = array())
         {
             $args = wp_parse_args($args, array(
@@ -116,7 +186,7 @@ if (!class_exists('AtfHtmlHelper')) {
                             . 'data-field-type="' . esc_attr($item['type']) . '" '
                             . 'data-field-name-template="' . esc_attr($args['name'] . '[#][' . $item['id'] . ']') . '">';
                         $item['id'] = $item['uniqid'];
-                        call_user_func(array(__CLASS__, $item['type'] ), $item);
+                        call_user_func(array(__CLASS__, $item['type']), $item);
                         echo '</td>';
 
 
