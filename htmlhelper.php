@@ -238,7 +238,7 @@ if (!class_exists('AtfHtmlHelper')) {
             $result = '<input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['add_class']) . '" /> ' . $args['after'];
 
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
+                $result .= '<p class="description">' . $args['desc'] . '</p>';
             }
 
             echo $result;
@@ -257,7 +257,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
             $result = '<input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="atf-datepicker ' . esc_attr($args['class'] . $args['addClass']) . '" />';
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
+                $result .= '<p class="description">' . $args['desc'] . '</p>';
             }
 
             echo $result;
@@ -279,7 +279,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
             $result = '<input type="number" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" />';
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
+                $result .= '<p class="description">' . $args['desc'] . '</p>';
             }
 
             echo $result;
@@ -362,7 +362,7 @@ if (!class_exists('AtfHtmlHelper')) {
                    rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Remove Upload', 'atf'); ?></a>
             </div>
 
-            <?php if (isset($args['desc'])) echo '<p class="description">' . esc_html($args['desc']) . '</p>';
+            <?php if (isset($args['desc'])) echo '<p class="description">' . $args['desc'] . '</p>';
 
         }
 
@@ -379,7 +379,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
             $result = '<div class="customize-control-content"><input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . $args['value'] . '" class="' . $args['class'] . $args['addClass'] . '" /></div>';
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
+                $result .= '<p class="description">' . $args['desc'] . '</p>';
             }
 
             echo $result;
@@ -402,7 +402,7 @@ if (!class_exists('AtfHtmlHelper')) {
             }
             $result = '<textarea id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" rows="' . esc_attr($args['rows']) . '" cols="' . esc_attr($args['cols']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" >' . esc_textarea($args['value']) . '</textarea>';
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
+                $result .= '<p class="description">' . $args['desc'] . '</p>';
             }
             echo $result;
         }
@@ -442,7 +442,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
             wp_editor(stripslashes($args['value']), $args['id'], $args['options']);
             if (isset($args['desc'])) {
-                echo '<p class="description">' . esc_html($args['desc']) . '</p>';
+                echo '<p class="description">' . $args['desc'] . '</p>';
             }
 
         }
@@ -468,7 +468,7 @@ if (!class_exists('AtfHtmlHelper')) {
             $result .= '</label>';
 
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
+                $result .= '<p class="description">' . $args['desc'] . '</p>';
             }
 
             echo $result;
@@ -537,7 +537,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 echo "Taxonomy not exist";
             }
             if (isset($args['desc'])) {
-                echo '<p class="description">' . esc_html($args['desc']) . '</p>';
+                echo '<p class="description">' . $args['desc'] . '</p>';
             }
         }
 
@@ -572,7 +572,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 $result .= '';
 
                 if (isset($args['desc'])) {
-                    $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
+                    $result .= '<p class="description">' . $args['desc'] . '</p>';
                 }
 
                 echo $result;
@@ -671,7 +671,7 @@ if (!class_exists('AtfHtmlHelper')) {
             $result .= '</fieldset>';
 
             if (isset($args['desc'])) {
-                $result .= '<p class="description">' . esc_html($args['desc']) . '</p>';
+                $result .= '<p class="description">' . $args['desc'] . '</p>';
             }
 
             echo $result;
