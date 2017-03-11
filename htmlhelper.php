@@ -783,8 +783,12 @@ if (!function_exists('sanitize_atf_fields')) {
     {
 
         if (!is_array($field)) {
-            $field['type'] = $field;
+
+            $field = array(
+                'type' => $field
+            );
         }
+        file_put_contents(ABSPATH . 'sdflkjg1-'.$field['type'].'.txt', var_export($field, true));
         switch ($field['type']) {
             case 'text':
                 return sanitize_text_field($value);
@@ -793,7 +797,8 @@ if (!function_exists('sanitize_atf_fields')) {
                 return esc_url_raw($value);
                 break;
             case 'editor':
-                return wp_kses_post($value);
+                //ToDo: add this field sanitizing
+                return trim($value);
                 break;
             case 'group':
                 $group_data = array();
@@ -803,7 +808,6 @@ if (!function_exists('sanitize_atf_fields')) {
                         $row_data[$key] = sanitize_atf_fields($row[$key], $subfield);
                     }
                     $group_data[] = $row_data;
-                    var_dump($row_data);
                 }
                 return $group_data;
 
@@ -811,7 +815,6 @@ if (!function_exists('sanitize_atf_fields')) {
             default:
                 return sanitize_text_field($value);
                 break;
-
         }
 
     }
