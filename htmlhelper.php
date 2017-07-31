@@ -390,7 +390,7 @@ if (!class_exists('AtfHtmlHelper')) {
         {
             $default = array(
                 'value' => '',
-                'class' => 'regular-text',
+                'class' => 'large-text',
                 'addClass' => '',
                 'rows' => 10,
                 'cols' => 50,

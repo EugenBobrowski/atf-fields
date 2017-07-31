@@ -6,21 +6,33 @@
 
 ### Textarea
 
+```php
+<?php AtfHtmlHelper::textarea(array(
+        'type' => 'textarea',
+        'title' => __('Head section'),
+        'class' => 'large-text code',
+        'default' => '',
+        'desc' => 'Head section script',
+        'rows' => 10,
+        'cols' => 50,
+                                               )); ?>
+```
+
 ### Radio
 
 ```php
 <?php AtfHtmlHelper::radio(array(
-                        'id' => 'receivers',
-                        'name' => 'receivers',
-                        'value' => '',
-                        'vertical' => false,
-                        'options' => array(
-                            'val1' => 'Label1',
-                            'val2' => 'Label2',
-                            'val3' => 'Label3',
-                            'val4' => 'Label4',
-                        )
-                    )); ?>
+        'id' => 'receivers',
+        'name' => 'receivers',
+        'value' => '',
+        'vertical' => false,
+        'options' => array(
+            'val1' => 'Label1',
+            'val2' => 'Label2',
+            'val3' => 'Label3',
+            'val4' => 'Label4',
+        )
+)); ?>
 ```
 
 `vertical` _(Default: **true**)_ - show in vertical style.
