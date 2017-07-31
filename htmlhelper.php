@@ -235,6 +235,8 @@ if (!class_exists('AtfHtmlHelper')) {
                 'after' => ''
             ));
 
+            $args['value'] = wp_unslash($args['value']);
+
             $result = '<input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['add_class']) . '" /> ' . $args['after'];
 
             if (isset($args['desc'])) {
@@ -388,18 +390,14 @@ if (!class_exists('AtfHtmlHelper')) {
 
         public static function textarea($args = array())
         {
-            $default = array(
+            $args = wp_parse_args($args, array(
                 'value' => '',
                 'class' => 'large-text',
                 'addClass' => '',
                 'rows' => 10,
                 'cols' => 50,
-            );
-            foreach ($default as $key => $value) {
-                if (!isset($args[$key])) {
-                    $args[$key] = $value;
-                }
-            }
+            ));
+            $args['value'] = wp_unslash($args['value']);
             $result = '<textarea id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" rows="' . esc_attr($args['rows']) . '" cols="' . esc_attr($args['cols']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" >' . esc_textarea($args['value']) . '</textarea>';
             if (isset($args['desc'])) {
                 $result .= '<p class="description">' . $args['desc'] . '</p>';
