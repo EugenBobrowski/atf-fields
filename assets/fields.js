@@ -72,12 +72,16 @@
         });
 
         $atfFields.find('.atf-options-group').sortable({
-            items: "tr.row",
+            items: ".row",
             handle: '.group-row-id',
             opacity: 0.5,
             cursor: 'move',
             axis: 'y',
             helper: 'clone'
+        });
+        $atfFields.find('.atf-options-group').on('click', '.header', function (e) {
+            e.preventDefault();
+            $(this).parents('.row').toggleClass('collapsed');
         });
 
         $atfFields.on('click', '.btn-control-group', function (e) {

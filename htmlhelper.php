@@ -27,8 +27,13 @@ if (!class_exists('AtfHtmlHelper')) {
 
         }
 
-        public static function table($fields, $data = array())
+        public static function table($fields, $data = array(), $args = array())
         {
+            $args = wp_parse_args($args, array(
+                'name_prefix' => '',
+                'id_prefix' => '',
+                'row_key' => 0,
+            ));
             ?>
             <table class="form-table atf-fields">
                 <tbody>
@@ -40,17 +45,26 @@ if (!class_exists('AtfHtmlHelper')) {
                         'name' => $key,
                         'type' => 'text',
                         'default' => '',
+
                     ));
 
                     $field['value'] = (isset ($data[$key])) ? $data[$key] : $field['default'];
+                    $field['name'] = empty($args['name_prefix']) ? $field['name'] : $args['name_prefix'] . '[' . $field['name'] . ']';
+                    $field['id'] = empty($args['id_prefix']) ? $field['id'] : $args['id_prefix'] . '_' . $field['id'];
 
+                    $cell_attrs = 'data-label="' . esc_attr($field['title']) . '" '
+                                . 'data-field-type="' . esc_attr($field['type']) . '" '
+                                . 'data-field-id-template="' . esc_attr($field['id']) . '"'
+                                . 'data-field-name-template="' . esc_attr($field['name']) . '"';
 
+                    $field['name'] = str_replace('#', $args['row_key'], $field['name']);
+                    $field['id'] = str_replace('#', $args['row_key'], $field['id']);
                     ?>
                     <tr>
                         <th scope="row">
                             <label for="<?php echo $field['id']; ?>"><?php echo $field['title'] ?></label>
                         </th>
-                        <td>
+                        <td <?php echo $cell_attrs; ?> >
                             <?php call_user_func(array(__CLASS__, $field['type']), $field); ?>
                         </td>
                     </tr>
@@ -70,6 +84,7 @@ if (!class_exists('AtfHtmlHelper')) {
         {
             $args = wp_parse_args($args, array(
                 'vertical' => false,
+                'collapsed' => false,
             ))
             ?>
 
@@ -80,15 +95,18 @@ if (!class_exists('AtfHtmlHelper')) {
                 foreach ($args['value'] as $row_key => $row_val) {
 
                     ?>
-                    <div class="row">
+                    <div class="row <?php echo ($args['collapsed']) ? 'collapsed' : '' ?>">
                         <div class="header">
                             <div class="group-row-id"><?php echo $i ?></div>
+                            <div class="collapse-it"></div>
                         </div>
-
+                        <div class="collapse-container">
                         <?php
 
                         AtfHtmlHelper::table($args['items'], $row_val, array(
-                            'name_prefix' => $args['name'] . '[' . $row_key . ']',
+                            'name_prefix' => $args['name'] . '[#]',
+                            'id_prefix' => $args['id'] . '_#_',
+                            'row_key' => $row_key,
                         ));
 
                         foreach ($args['items'] as $key => $item) {
@@ -116,6 +134,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
                         }
                         ?>
+                        </div>
                         <div class="group-row-controls">
                             <a class="button button-primary btn-control-group plus" href="#">+</a>
                             <a class=" btn-control-group minus" href="#"><?php _e('Delete'); ?></a>
