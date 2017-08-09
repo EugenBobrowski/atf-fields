@@ -42,6 +42,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
                     $field = wp_parse_args($field, array(
                         'id' => $key,
+                        'origin_id' => $key,
                         'name' => $key,
                         'type' => 'text',
                         'default' => '',
@@ -49,20 +50,20 @@ if (!class_exists('AtfHtmlHelper')) {
                     ));
 
                     $field['value'] = (isset ($data[$key])) ? $data[$key] : $field['default'];
-                    $field['name'] = empty($args['name_prefix']) ? $field['name'] : $args['name_prefix'] . '[' . $field['name'] . ']';
-                    $field['id'] = empty($args['id_prefix']) ? $field['id'] : $args['id_prefix'] . '_' . $field['id'];
+                    $field['tmpl_name'] = empty($args['name_prefix']) ? $field['name'] : $args['name_prefix'] . '[' . $field['name'] . ']';
+                    $field['tmpl_id'] = empty($args['id_prefix']) ? $field['id'] : $args['id_prefix'] . '_' . $field['id'];
 
                     $cell_attrs = 'data-label="' . esc_attr($field['title']) . '" '
                                 . 'data-field-type="' . esc_attr($field['type']) . '" '
-                                . 'data-field-id-template="' . esc_attr($field['id']) . '"'
-                                . 'data-field-name-template="' . esc_attr($field['name']) . '"';
+                                . 'data-field-id-template="' . esc_attr($field['tmpl_id']) . '"'
+                                . 'data-field-name-template="' . esc_attr($field['tmpl_name']) . '"';
 
-                    $field['name'] = str_replace('#', $args['row_key'], $field['name']);
-                    $field['id'] = str_replace('#', $args['row_key'], $field['id']);
+                    $field['name'] = str_replace('#', $args['row_key'], $field['tmpl_name']);
+                    $field['id'] = str_replace('#', $args['row_key'], $field['tmpl_id']);
                     ?>
                     <tr>
-                        <th scope="row">
-                            <label for="<?php echo $field['id']; ?>"><?php echo $field['title'] ?></label>
+                        <th scope="row" >
+                            <label for="<?php echo $field['id']; ?>"  data-field-id-template="<?php echo esc_attr($field['tmpl_id']); ?>"><?php echo $field['title'] ?></label>
                         </th>
                         <td <?php echo $cell_attrs; ?> >
                             <?php call_user_func(array(__CLASS__, $field['type']), $field); ?>
@@ -85,7 +86,8 @@ if (!class_exists('AtfHtmlHelper')) {
             $args = wp_parse_args($args, array(
                 'vertical' => false,
                 'collapsed' => false,
-            ))
+                'group_title' => '',
+            ));
             ?>
 
             <div class="atf-options-group <?php echo ($args['vertical']) ? 'vertical' : ''; ?>">
@@ -93,11 +95,11 @@ if (!class_exists('AtfHtmlHelper')) {
                 $i = 1;
                 if (empty($args['value']) || !is_array($args['value'])) $args['value'] = array(array());
                 foreach ($args['value'] as $row_key => $row_val) {
-
                     ?>
                     <div class="row <?php echo ($args['collapsed']) ? 'collapsed' : '' ?>">
                         <div class="header">
                             <div class="group-row-id"><?php echo $i ?></div>
+                            <span data-title-template="<?php echo $args['group_title']; ?>"></span>
                             <div class="collapse-it"></div>
                         </div>
                         <div class="collapse-container">
@@ -248,6 +250,7 @@ if (!class_exists('AtfHtmlHelper')) {
         public static function text($args = array())
         {
             $args = wp_parse_args($args, array(
+                'origin_id' => $args['id'],
                 'value' => '',
                 'class' => 'regular-text',
                 'add_class' => '',
@@ -256,7 +259,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
             $args['value'] = wp_unslash($args['value']);
 
-            $result = '<input type="text" id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['add_class']) . '" /> ' . $args['after'];
+            $result = '<input type="text" id="' . esc_attr($args['id']) . '" data-id="' . esc_attr($args['origin_id']) . '" name="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '" class="' . esc_attr($args['class'] . $args['add_class']) . '" /> ' . $args['after'];
 
             if (isset($args['desc'])) {
                 $result .= '<p class="description">' . $args['desc'] . '</p>';

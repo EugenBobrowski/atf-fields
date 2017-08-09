@@ -71,7 +71,9 @@
             $(this).parent().removeMedia();
         });
 
-        $atfFields.find('.atf-options-group').sortable({
+        var $groups = $atfFields.find('.atf-options-group');
+
+        $groups.sortable({
             items: ".row",
             handle: '.group-row-id',
             opacity: 0.5,
@@ -79,10 +81,40 @@
             axis: 'y',
             helper: 'clone'
         });
-        $atfFields.find('.atf-options-group').on('click', '.header', function (e) {
+        $groups.on('click', '.header', function (e) {
             e.preventDefault();
             $(this).parents('.row').toggleClass('collapsed');
         });
+
+
+
+
+
+        var group_title_cahge = function (e) {
+            var $field = $(this),
+                $row = $field.parents('.row'),
+                $title = $row.find('.header').find('span'),
+                template = $title.data('title-template'),
+                field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
+
+            if (template === undefined || template === '') return true;
+
+            $row.find('input, textarea').each(function () {
+                var $field = $(this),
+                    field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
+                template = template.replace(new RegExp("{"+field_id+"}", 'g'), $field.val())
+            });
+
+            $title.html(template);
+
+            console.log(field_id);
+        };
+        $groups.find('.row').each(function () {
+            var $row = $(this);
+
+            $row.find('input, textarea').first().each(group_title_cahge)
+        });
+        $groups.find('input, textarea').on('change', group_title_cahge);
 
         $atfFields.on('click', '.btn-control-group', function (e) {
             e.preventDefault();
@@ -184,7 +216,6 @@
                 $list.append('<li><span class="dashicons dashicons-media-default"></span> ' + file.name + ' </li>')
 
             }
-            console.log();
         });
     };
 
@@ -238,14 +269,16 @@
 
     $.fn.resetRow = function () {
         var rowId = uniqid();
-        $(this).find('td').each(function () {
+        var $row =  $(this);
+        $row.find('td').each(function () {
             var $td = $(this);
 
-            if ($td.data('field-name-template') != undefined) {
+            if ($td.data('field-name-template') !== undefined) {
 
-                var template = $td.data('field-name-template').replace(new RegExp("#", 'g'), rowId);
+                var name = $td.data('field-name-template').replace(new RegExp("#", 'g'), rowId),
+                    id = ($td.data('field-id-template') !== undefined) ? $td.data('field-id-template').replace(new RegExp("#", 'g'), rowId) : uniqid();
 
-                if ($td.data('field-type') == 'addMedia') {
+                if ($td.data('field-type') === 'addMedia') {
                     $td.removeMedia();
                 } else {
                     // console.log($td);
@@ -253,17 +286,26 @@
                 // console.log(template);
                 $td.find('.chosen-select').css('display', 'block').next().remove();
                 $td.find('input, select')
-                    .attr('id', uniqid())
-                    .attr('name', template)
+                    .attr('id', id)
+                    .attr('name', name)
 
                     .val('');
                 // $td.append(template);
                 // $td.find('.chosen-select').chosen();
-                template = '';
+                name = '';
             }
+        });
 
+        $row.find('label').each(function () {
+            var $label = $(this);
+            if ($label.data('field-id-template') === undefined) return false;
+
+            var id = $label.data('field-id-template').replace(new RegExp("#", 'g'), rowId);
+
+            $label.attr('for', id);
 
         });
+
     };
 
 
