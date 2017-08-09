@@ -85,34 +85,10 @@
             e.preventDefault();
             $(this).parents('.row').toggleClass('collapsed');
         });
-
-
-
-
-
-        var group_title_cahge = function (e) {
-            var $field = $(this),
-                $row = $field.parents('.row'),
-                $title = $row.find('.header').find('span'),
-                template = $title.data('title-template'),
-                field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
-
-            if (template === undefined || template === '') return true;
-
-            $row.find('input, textarea').each(function () {
-                var $field = $(this),
-                    field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
-                template = template.replace(new RegExp("{"+field_id+"}", 'g'), $field.val())
-            });
-
-            $title.html(template);
-
-            console.log(field_id);
-        };
         $groups.find('.row').each(function () {
             var $row = $(this);
 
-            $row.find('input, textarea').first().each(group_title_cahge)
+            $row.find('input, textarea').first().each(group_title_cahge);
         });
         $groups.find('input, textarea').on('change', group_title_cahge);
 
@@ -251,6 +227,26 @@
         s.parentNode.insertBefore(wf, s);
     })();
 
+    var group_title_cahge = function (e) {
+        var $field = $(this),
+            $row = $field.parents('.row'),
+            $title = $row.find('.header').find('span'),
+            template = $title.data('title-template'),
+            field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
+
+        if (template === undefined || template === '') return true;
+
+        $row.find('input, textarea').each(function () {
+            var $field = $(this),
+                field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
+            template = template.replace(new RegExp("{"+field_id+"}", 'g'), $field.val())
+        });
+
+        $title.html(template);
+
+        console.log(field_id);
+    };
+
 
     $.fn.removeMedia = function () {
         var $mediaContainer = $(this).parent();
@@ -305,6 +301,8 @@
             $label.attr('for', id);
 
         });
+
+        $row.find('input, textarea').first().each(group_title_cahge);
 
     };
 
