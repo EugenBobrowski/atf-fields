@@ -49,6 +49,13 @@ if (!class_exists('AtfHtmlHelper')) {
 
                     ));
 
+                    if ($field['type'] == 'title' ) {
+                        echo  '<tr>';
+                        echo  '<th scope="row" colspan="2"><h3 class="title">'.$field['title'].'</h3></th>';
+                        echo  '</tr>';
+                        continue;
+                    }
+
                     $field['value'] = (isset ($data[$key])) ? $data[$key] : $field['default'];
                     $field['tmpl_name'] = empty($args['name_prefix']) ? $field['name'] : $args['name_prefix'] . '[' . $field['name'] . ']';
                     $field['tmpl_id'] = empty($args['id_prefix']) ? $field['id'] : $args['id_prefix'] . '_' . $field['id'];
