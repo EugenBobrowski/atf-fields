@@ -615,11 +615,14 @@ if (!class_exists('AtfHtmlHelper')) {
 
             $args = wp_parse_args($args, $default = array(
                 'vertical' => true,
+                'buttons' => false,
                 'value' => '',
                 'class' => '',
                 'addClass' => '',
                 'attributes' => array(),
             ));
+
+            $args['class'] .= ($args['buttons']) ? ' check-buttons' : '';
 
             $attributes = ' ';
 
@@ -652,10 +655,13 @@ if (!class_exists('AtfHtmlHelper')) {
         {
             $args = wp_parse_args($args, array(
                 'vertical' => true,
+                'buttons' => false,
                 'value' => '',
                 'class' => '',
                 'addClass' => '',
             ));
+
+            $args['class'] .= ($args['buttons']) ? ' check-buttons' : '';
 
             if (isset($args['taxonomy'])) {
                 if (taxonomy_exists($args['taxonomy'])) {
@@ -815,7 +821,6 @@ if (!function_exists('sanitize_atf_fields')) {
                 'type' => $field
             );
         }
-        file_put_contents(ABSPATH . 'sdflkjg1-'.$field['type'].'.txt', var_export($field, true));
         switch ($field['type']) {
             case 'text':
                 return sanitize_text_field($value);
