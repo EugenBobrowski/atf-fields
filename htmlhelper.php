@@ -845,7 +845,7 @@ if (!function_exists('sanitize_atf_fields')) {
 
                 break;
             default:
-                return sanitize_text_field($value);
+                return ($value);
                 break;
         }
 
