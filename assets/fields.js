@@ -2,10 +2,82 @@
     "use strict";
 
 
-    var $atfFields, custom_file_frame = {}, $radioImages, $upload;
+    var _ = {}, $atfFields, custom_file_frame = {}, $radioImages, $upload;
+
+
+    _.init = function () {
+        _.$ = {
+            body: $('body')
+        };
+        _.$.fields = _.$.body.find('.atf-fields');
+        _.search.init();
+    };
+    _.search = {
+        init: function () {
+            _.$.body.on('focus keyup', '.atf-field-search', _.search.search);
+            _.$.body.on('blur', '.atf-field-search', _.search.stop);
+            _.$.body.on('click', '.atf-field-search-result-item', _.search.set_value);
+            _.$.body.on('click', '.atf-field-search-container .selected', _.search.focus);
+
+        },
+        awaiting: false,
+        focus: function (e) {
+            $(this).parents('.search-box').find('.atf-field-search').trigger('focus');
+        },
+        search: function (e) {
+            var $this = $(this),
+                $parent = $this.parents('.search-box'),
+                $results = $parent.find('ul');
+            $parent.find('.selected').fadeOut();
+            $results.addClass('searching');
+
+
+            clearTimeout(_.search.awaiting);
+            _.search.awaiting = setTimeout(function () {
+                $.post($this.data('ajax-url'), {
+                        action: $this.data('action'),
+                        s: $this.val(),
+                    },
+                    function (response) {
+                        $results.removeClass('searching').addClass('results').html(_.search.results_html(response));
+                        console.log(response);
+                    });
+            }, 500);
+
+        },
+        results_html: function (r) {
+            var str = '';
+            $.each(r, function(index, value) {
+                str += '<li data-value="'+value.value+'" class="atf-field-search-result-item">' + value.html + '</li>';
+            });
+            return str;
+        },
+        set_value: function (e) {
+            e.preventDefault();
+            var $this = $(this),
+                $parent = $this.parents('.search-box');
+
+            $parent.find('.value-field').val($this.data('value'));
+            $parent.find('.selected').html($this.text());
+
+
+            console.log($this.data('value'));
+        },
+        stop: function (e) {
+            var $parent = $(this).parents('.search-box');
+            $parent.find('.selected').show();
+            $parent.find('.atf-field-search').val('');
+            setTimeout(function () {
+                $parent.find('ul')
+                    .removeClass('searching').removeClass('results');
+            }, 200);
+
+        },
+    };
 
     $(document).ready(function () {
 
+        _.init();
         $atfFields = $('.atf-fields');
         $radioImages = $('.radio-image');
         $upload = $('.upload-field');

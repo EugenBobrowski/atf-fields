@@ -549,6 +549,47 @@ if (!class_exists('AtfHtmlHelper')) {
             echo $result;
         }
 
+	    public static function search( $args ) {
+		    $args = wp_parse_args( $args, array(
+			    'value' => '',
+			    'class' => 'regular-text',
+			    'add_class' => '',
+			    'after' => '',
+                'ajax_action' => '',
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'placeholder' => __('Search'),
+			    'selected_callback' => array('AtfHtmlHelper', 'search__selected_value')
+		    ) );
+
+		    $args['value'] = wp_unslash($args['value']);
+		    ?>
+            <div class="atf-field-search-container search-box">
+                    <input type="text" id="<?php echo esc_attr( $args['id'] ); ?>"
+                           name=""
+                           value=""
+                           data-action="<?php echo esc_attr( $args['ajax_action'] ); ?>"
+                           data-ajax-url="<?php echo esc_attr( $args['ajax_url'] ); ?>"
+                           class="atf-field-search <?php echo esc_attr( $args['class'] . $args['add_class'] ); ?>"/>
+                <ul>
+
+                </ul>
+	            <?php echo $args['after']; ?>
+                <input type="hidden" name="<?php echo esc_attr( $args['name'] ); ?>"
+                       value="<?php echo esc_attr( $args['value'] ); ?>" class="value-field">
+                <div class="selected"><?php echo call_user_func($args['selected_callback'], $args['value'])?></div>
+            </div>
+
+            <?php
+
+		    if (isset($args['desc'])) {
+			    echo '<p class="description">' . $args['desc'] . '</p>';
+		    }
+
+	    }
+	    public static function search__selected_value($value) {
+            return $value;
+        }
+
         public static function taxonomy_select($args)
         {
             self::selectFromTaxonomy($args);
