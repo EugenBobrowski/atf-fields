@@ -354,7 +354,9 @@ if (!class_exists('AtfHtmlHelper')) {
                 'file' => false,
                 'show_link' => false,
                 'preview_size' => '150px',
+                'save' => 'url', //id
             ));
+
             if (empty($args['value'])) {
                 $screenshot = ' style="display:none;"';
                 $remove = ' style="display:none;"';
@@ -363,16 +365,31 @@ if (!class_exists('AtfHtmlHelper')) {
                 $screenshot = '';
                 $remove = '';
                 $upload = ' style="display:none;"';
+
+
             }
-            if ($args['file']) {
-                $src = includes_url('images/media/document.png');
-            } else {
-                $src = $args['value'];
+
+
+	        if ( $args['file'] ) {
+		        $src = includes_url( 'images/media/document.png' );
+	        } elseif ( $args['save'] == 'id' ) {
+                $src = wp_get_attachment_image_src($args['value']);
+                if (is_array($src)) {
+	                $src = $src[0];
+                } else {
+                    $src = '';
+	                $screenshot = ' style="display:none;"';
+                }
+		        $args['desc'] = str_replace( '{id}', $args['value'], $args['desc']);
+
+	        } else {
+		        $src = $args['value'];
             }
+
 
 
             ?>
-            <div class="uploader <?php echo ($args['file']) ? 'file' : ''; ?>">
+            <div class="uploader <?php echo ($args['file']) ? 'file' : ''; echo 'save-' . $args['save']; ?> ">
                 <div class="atf-preview" style="<?php echo 'width: ' . $args['preview_size'] . ';'; ?>">
                     <img class="atf-options-upload-screenshot" id="<?php echo esc_attr('screenshot-' . $args['id']); ?>"
                          src="<?php echo esc_url($src); ?>" <?php echo $screenshot; ?>/>
@@ -391,6 +408,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 <a href="javascript:void(0);"
                    class="atf-options-upload-remove  button-secondary"<?php echo $remove; ?>
                    rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Remove Upload', 'atf'); ?></a>
+
             </div>
 
             <?php if (isset($args['desc'])) echo '<p class="description">' . $args['desc'] . '</p>';
@@ -826,7 +844,12 @@ if (!function_exists('sanitize_atf_fields')) {
                 return sanitize_text_field($value);
                 break;
             case 'media':
-                return esc_url_raw($value);
+                if (!empty($field['save']) && $field['save'] == 'id') {
+                    return absint($value);
+                } else {
+	                return esc_url_raw($value);
+                }
+
                 break;
             case 'editor':
                 //ToDo: add this field sanitizing

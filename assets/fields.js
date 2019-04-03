@@ -2,22 +2,101 @@
     "use strict";
 
 
-    var $atfFields, custom_file_frame = {}, $radioImages, $upload;
+    var _ = {}, $atfFields, custom_file_frame = {}, $radioImages;
 
-    $(document).ready(function () {
 
-        $atfFields = $('.atf-fields');
-        $radioImages = $('.radio-image');
-        $upload = $('.upload-field');
+    _.init = function () {
+        _.$ = {
+            body: $('body')
+        };
+        _.$.fields = _.$.body.find('.atf-fields');
+        _.search.init();
+        _.media.init();
+    };
+    _.search = {
+        init: function () {
+            _.$.body.on('focus keyup', '.atf-field-search', _.search.search);
+            _.$.body.on('blur', '.atf-field-search', _.search.stop);
+            _.$.body.on('click', '.atf-field-search-result-item', _.search.set_value);
+            _.$.body.on('click', '.atf-field-search-container .selected', _.search.focus);
 
-        $atfFields.find('.chosen-select').chosen();
+        },
+        awaiting: false,
+        focus: function (e) {
+            $(this).parents('.search-box').find('.atf-field-search').trigger('focus');
+        },
+        search: function (e) {
+            var $this = $(this),
+                $parent = $this.parents('.search-box'),
+                $results = $parent.find('ul');
+            $parent.find('.selected').fadeOut();
+            $results.addClass('searching');
 
-        $atfFields.find('.uploader').find("img[src='']").attr("src", atf_html_helper.url);
 
-        $atfFields.on('click', ".atf-options-upload", function (event) {
+            clearTimeout(_.search.awaiting);
+            _.search.awaiting = setTimeout(function () {
+                $.post($this.data('ajax-url'), {
+                        action: $this.data('action'),
+                        s: $this.val(),
+                    },
+                    function (response) {
+                        $results.removeClass('searching').addClass('results').html(_.search.results_html(response));
+                        console.log(response);
+                    });
+            }, 500);
+
+        },
+        results_html: function (r) {
+            var str = '';
+            $.each(r, function(index, value) {
+                str += '<li data-value="'+value.value+'" class="atf-field-search-result-item">' + value.html + '</li>';
+            });
+            return str;
+        },
+        set_value: function (e) {
+            e.preventDefault();
+            var $this = $(this),
+                $parent = $this.parents('.search-box');
+
+            $parent.find('.value-field').val($this.data('value'));
+            $parent.find('.selected').html($this.text());
+
+
+            console.log($this.data('value'));
+        },
+        stop: function (e) {
+            var $parent = $(this).parents('.search-box');
+            $parent.find('.selected').show();
+            $parent.find('.atf-field-search').val('');
+            setTimeout(function () {
+                $parent.find('ul')
+                    .removeClass('searching').removeClass('results');
+            }, 200);
+
+        },
+    };
+    _.media = {
+        init: function () {
+            _.$.uploads = _.$.fields.find('.upload-field');
+
+            _.$.fields.on('click', ".atf-options-upload", _.media.insert_value);
+
+            _.$.fields.on('click', '.atf-options-upload-remove', _.media.remove_value);
+
+            $.fn.removeMedia = function () {
+                var $mediaContainer = $(this).parent();
+                $mediaContainer.find('input').val('');
+                $mediaContainer.find('.atf-options-upload').show('slow');
+                $mediaContainer.find('.atf-options-upload-screenshot').attr("src", atf_html_helper.url);
+                $mediaContainer.find('.atf-options-upload-remove').hide('slow');
+            };
+        },
+
+        insert_value: function (event) {
             var $this = $(this);
-            var activeFileUploadContext = $this.parent();
-            var type = (activeFileUploadContext.hasClass('file')) ? 'file' : 'image';
+            var $thisUploader = $this.parent();
+            var type = ($thisUploader.hasClass('file')) ? 'file' : 'image';
+            var save = ($thisUploader.hasClass('save-id')) ? 'id' : 'url';
 
             event.preventDefault();
 
@@ -40,7 +119,7 @@
                 title: $this.data("choose"),
 
                 // Tell the modal to show only images. Ignore if want ALL
-                library: (activeFileUploadContext.hasClass('file')) ? {} : { type: 'image' },
+                library: ($thisUploader.hasClass('file')) ? {} : { type: 'image' },
                 // Customize the submit button.
                 button: {
                     // Set the text of the button.
@@ -51,25 +130,60 @@
             custom_file_frame[type].on("select", function () {
                 // Grab the selected attachment.
                 var attachment = custom_file_frame[type].state().get("selection").first();
+
                 console.log(attachment);
 
                 // Update value of the targetfield input with the attachment url.
 
-                $('.atf-options-upload-screenshot', activeFileUploadContext).attr('src', (attachment.attributes.type == 'image') ? attachment.attributes.url : attachment.attributes.icon);
-                activeFileUploadContext.find('input').val(attachment.attributes.url).trigger('change');
+                $('.atf-options-upload-screenshot', $thisUploader).attr('src', (attachment.attributes.type == 'image') ? attachment.attributes.url : attachment.attributes.icon);
 
-                $('.atf-options-upload', activeFileUploadContext).hide();
-                $('.atf-options-upload-screenshot', activeFileUploadContext).show();
-                $('.atf-options-upload-remove', activeFileUploadContext).show();
+                if (save === 'id') {
+                    $thisUploader.find('input').val(attachment.attributes.id).trigger('change');
+                } else {
+                    $thisUploader.find('input').val(attachment.attributes.url).trigger('change');
+                }
+
+
+
+                $('.atf-options-upload', $thisUploader).hide();
+                $('.atf-options-upload-screenshot', $thisUploader).show();
+                $('.atf-options-upload-remove', $thisUploader).show();
+
+                $thisUploader.siblings().find('.insert-attachment-id').each(function () {
+                    var $some = $(this);
+                    var attr = $some.data('attr');
+
+                    console.log(attr);
+
+                    $some.attr(attr, attachment.attributes.id);
+
+                    if (attr.indexOf('data-') === 0) {
+                        $some.data(attr.replace('data-', ''), attachment.attributes.id);
+                    }
+
+                });
+
             });
 
             custom_file_frame[type].open();
-        });
+        },
 
-        $atfFields.on('click', '.atf-options-upload-remove', function (event) {
+        remove_value: function (event) {
             event.preventDefault();
             $(this).parent().removeMedia();
-        });
+        },
+
+    };
+
+    $(document).ready(function () {
+
+        _.init();
+        $atfFields = $('.atf-fields');
+        $radioImages = $('.radio-image');
+
+        $atfFields.find('.chosen-select').chosen();
+
+
 
         var $groups = $atfFields.find('.atf-options-group');
 
@@ -167,44 +281,12 @@
                 });
             }
         }
-        if ($upload.length > 0) {
-            upload();
-        }
 
         jQuery('.atf-datepicker').datepicker({
             dateFormat : 'dd-mm-yy'
         });
         
     });
-
-    var upload = function () {
-        var $field = $upload.find('input');
-        var $list = $upload.find ('ul');
-
-        $atfFields.on('change', '.upload-field input', function (e) {
-            var $this = $(this);
-            var files = $this.get(0).files;
-            var $list = $this.parents('.upload-field').find('ul');
-            $list.html('');
-
-            for (var i = 0, numFiles = files.length; i < numFiles; i++) {
-                var file = files[i];
-                $list.append('<li><span class="dashicons dashicons-media-default"></span> ' + file.name + ' </li>')
-
-            }
-        });
-    };
-
-    $.fn.extend({
-        emptyAtfUpload: function () {
-            var $this = $(this);
-            $this.val('');
-            $this.parents('.upload-field').find('.file-list').find('li').hide('slow', function () {
-                $(this).remove();
-            });
-        }
-    });
-
 
     //googlefonts
 
@@ -247,14 +329,6 @@
         console.log(field_id);
     };
 
-
-    $.fn.removeMedia = function () {
-        var $mediaContainer = $(this).parent();
-        $mediaContainer.find('input').val('');
-        $mediaContainer.find('.atf-options-upload').show('slow');
-        $mediaContainer.find('.atf-options-upload-screenshot').attr("src", atf_html_helper.url);
-        $mediaContainer.find('.atf-options-upload-remove').hide('slow');
-    };
     $.fn.resetOrder = function () {
         var i = 1;
         $(this).parent().find('.row').each(function () {
