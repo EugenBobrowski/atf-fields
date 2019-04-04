@@ -94,7 +94,7 @@
 
         insert_value: function (event) {
             var $this = $(this);
-            var $thisUploader = $this.parent();
+            var $thisUploader = $this.parents('.uploader');
             var type = ($thisUploader.hasClass('file')) ? 'file' : 'image';
             var save = ($thisUploader.hasClass('save-id')) ? 'id' : 'url';
 

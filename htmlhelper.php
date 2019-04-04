@@ -393,6 +393,14 @@ if (!class_exists('AtfHtmlHelper')) {
                 <div class="atf-preview" style="<?php echo 'width: ' . $args['preview_size'] . ';'; ?>">
                     <img class="atf-options-upload-screenshot" id="<?php echo esc_attr('screenshot-' . $args['id']); ?>"
                          src="<?php echo esc_url($src); ?>" <?php echo $screenshot; ?>/>
+                    <a data-update="Select File"
+                       data-choose="Choose a File"
+                       href="javascript:void(0);"
+                       class="atf-options-upload" <?php echo $upload; ?>
+                       rel-id="<?php echo esc_attr($args['id']); ?>"><span class="dashicons dashicons-plus"></span></a>
+                    <a href="javascript:void(0);"
+                       class="atf-options-upload-remove"<?php echo $remove; ?>
+                       rel-id="<?php echo esc_attr($args['id']); ?>"><span class="dashicons dashicons-no"></span></a>
                 </div>
 
                 <input type="<?php echo ($args['show_link']) ? 'text' : 'hidden'; ?>"
@@ -400,14 +408,6 @@ if (!class_exists('AtfHtmlHelper')) {
                        name="<?php echo esc_attr($args['name']); ?>"
                        value="<?php echo esc_url($args['value']); ?>"
                        class="<?php echo esc_attr($args['class'] . $args['addClass']); ?>"/>
-                <a data-update="Select File"
-                   data-choose="Choose a File"
-                   href="javascript:void(0);"
-                   class="atf-options-upload button-secondary" <?php echo $upload; ?>
-                   rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Upload', 'atf'); ?></a>
-                <a href="javascript:void(0);"
-                   class="atf-options-upload-remove  button-secondary"<?php echo $remove; ?>
-                   rel-id="<?php echo esc_attr($args['id']); ?>"><?php echo __('Remove Upload', 'atf'); ?></a>
 
             </div>
 
