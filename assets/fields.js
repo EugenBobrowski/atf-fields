@@ -77,11 +77,12 @@
     };
     _.media = {
         init: function () {
-            _.$.uploads = _.$.fields.find('.upload-field');
-
+console.log('asdf')
             _.$.fields.on('click', ".atf-options-upload", _.media.insert_value);
 
             _.$.fields.on('click', '.atf-options-upload-remove', _.media.remove_value);
+
+            _.$.current_uploader = null;
 
             $.fn.removeMedia = function () {
                 var $mediaContainer = $(this).parent();
@@ -94,9 +95,9 @@
 
         insert_value: function (event) {
             var $this = $(this);
-            var $thisUploader = $this.parents('.uploader');
-            var type = ($thisUploader.hasClass('file')) ? 'file' : 'image';
-            var save = ($thisUploader.hasClass('save-id')) ? 'id' : 'url';
+            _.$.current_uploader = $this.parents('.uploader');
+            var type = (_.$.current_uploader.hasClass('file')) ? 'file' : 'image';
+            var save = (_.$.current_uploader.hasClass('save-id')) ? 'id' : 'url';
 
             event.preventDefault();
 
@@ -119,7 +120,7 @@
                 title: $this.data("choose"),
 
                 // Tell the modal to show only images. Ignore if want ALL
-                library: ($thisUploader.hasClass('file')) ? {} : { type: 'image' },
+                library: (_.$.current_uploader.hasClass('file')) ? {} : { type: 'image' },
                 // Customize the submit button.
                 button: {
                     // Set the text of the button.
@@ -135,21 +136,21 @@
 
                 // Update value of the targetfield input with the attachment url.
 
-                $('.atf-options-upload-screenshot', $thisUploader).attr('src', (attachment.attributes.type == 'image') ? attachment.attributes.url : attachment.attributes.icon);
+                _.$.current_uploader.find('.atf-options-upload-screenshot').attr('src', (attachment.attributes.type == 'image') ? attachment.attributes.url : attachment.attributes.icon);
 
                 if (save === 'id') {
-                    $thisUploader.find('input').val(attachment.attributes.id).trigger('change');
+                    _.$.current_uploader.find('input').val(attachment.attributes.id).trigger('change');
                 } else {
-                    $thisUploader.find('input').val(attachment.attributes.url).trigger('change');
+                    _.$.current_uploader.find('input').val(attachment.attributes.url).trigger('change');
                 }
 
 
 
-                $('.atf-options-upload', $thisUploader).hide();
-                $('.atf-options-upload-screenshot', $thisUploader).show();
-                $('.atf-options-upload-remove', $thisUploader).show();
+                _.$.current_uploader.find('.atf-options-upload').hide();
+                _.$.current_uploader.find('.atf-options-upload-screenshot').show();
+                _.$.current_uploader.find('.atf-options-upload-remove').show();
 
-                $thisUploader.siblings().find('.insert-attachment-id').each(function () {
+                _.$.current_uploader.siblings().find('.insert-attachment-id').each(function () {
                     var $some = $(this);
                     var attr = $some.data('attr');
 
