@@ -406,13 +406,21 @@ if (!class_exists('AtfHtmlHelper')) {
                 <input type="<?php echo ($args['show_link']) ? 'text' : 'hidden'; ?>"
                        id="<?php echo esc_attr($args['id']); ?>"
                        name="<?php echo esc_attr($args['name']); ?>"
-                       value="<?php echo esc_url($args['value']); ?>"
+                       value="<?php echo esc_attr($args['value']); ?>"
                        class="<?php echo esc_attr($args['class'] . $args['addClass']); ?>"/>
 
             </div>
 
             <?php if (isset($args['desc'])) echo '<p class="description">' . $args['desc'] . '</p>';
 
+        }
+
+        public static function media_id ($args = array()) {
+	        $args = wp_parse_args($args, array(
+		        'save' => 'id',
+	        ));
+
+	        self::media($args);
         }
 
         /**
