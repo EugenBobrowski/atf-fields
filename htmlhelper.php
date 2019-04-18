@@ -897,6 +897,7 @@ if (!function_exists('sanitize_atf_fields')) {
                 return trim($value);
                 break;
             case 'group':
+            case 'group_items':
                 $group_data = array();
                 foreach ($value as $row) {
                     $row_data = array();
