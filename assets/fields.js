@@ -9,9 +9,11 @@
         _.$ = {
             body: $('body')
         };
+        _.$.find = _.$.body.find;
         _.$.fields = _.$.body.find('.atf-fields');
         _.search.init();
         _.media.init();
+        _.repeater.init();
     };
     _.search = {
         init: function () {
@@ -77,7 +79,6 @@
     };
     _.media = {
         init: function () {
-console.log('asdf')
             _.$.fields.on('click', ".atf-options-upload", _.media.insert_value);
 
             _.$.fields.on('click', '.atf-options-upload-remove', _.media.remove_value);
@@ -175,6 +176,50 @@ console.log('asdf')
         },
 
     };
+    _.repeater = {
+        init: function () {
+            _.$.groups = _.$.fields.find('.atf-options-group');
+
+            _.$.groups.sortable({
+                items: ".row",
+                handle: '.group-row-id',
+                opacity: 0.5,
+                cursor: 'move',
+                axis: 'y',
+                helper: 'clone'
+            });
+
+            _.$.groups.find('.row').each(function () {
+                $(this).find('input, textarea').first().each(_.repeater.group_title_change);
+            });
+
+            _.$.groups.on('click', '.header', _.repeater.toggle_collapse);
+            _.$.groups.on('change', 'input, textarea', _.repeater.group_title_change);
+        },
+        toggle_collapse: function (e) {
+            e.preventDefault();
+            $(this).parents('.row').toggleClass('collapsed');
+        },
+        group_title_change: function (e) {
+            var $field = $(this),
+                $row = $field.parents('.row'),
+                $title = $row.find('.header').find('span'),
+                template = $title.data('title-template'),
+                field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
+
+            if (template === undefined || template === '') return true;
+
+            $row.find('input, textarea').each(function () {
+                var $field = $(this),
+                    field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
+                template = template.replace(new RegExp("{"+field_id+"}", 'g'), $field.val())
+            });
+
+            $title.html(template);
+
+            console.log(field_id);
+        }
+    };
 
     $(document).ready(function () {
 
@@ -183,29 +228,6 @@ console.log('asdf')
         $radioImages = $('.radio-image');
 
         $atfFields.find('.chosen-select').chosen();
-
-
-
-        var $groups = $atfFields.find('.atf-options-group');
-
-        $groups.sortable({
-            items: ".row",
-            handle: '.group-row-id',
-            opacity: 0.5,
-            cursor: 'move',
-            axis: 'y',
-            helper: 'clone'
-        });
-        $groups.on('click', '.header', function (e) {
-            e.preventDefault();
-            $(this).parents('.row').toggleClass('collapsed');
-        });
-        $groups.find('.row').each(function () {
-            var $row = $(this);
-
-            $row.find('input, textarea').first().each(group_title_cahge);
-        });
-        $groups.find('input, textarea').on('change', group_title_cahge);
 
         $atfFields.on('click', '.btn-control-group', function (e) {
             e.preventDefault();
@@ -310,26 +332,6 @@ console.log('asdf')
         s.parentNode.insertBefore(wf, s);
     })();
 
-    var group_title_cahge = function (e) {
-        var $field = $(this),
-            $row = $field.parents('.row'),
-            $title = $row.find('.header').find('span'),
-            template = $title.data('title-template'),
-            field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
-
-        if (template === undefined || template === '') return true;
-
-        $row.find('input, textarea').each(function () {
-            var $field = $(this),
-                field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
-            template = template.replace(new RegExp("{"+field_id+"}", 'g'), $field.val())
-        });
-
-        $title.html(template);
-
-        console.log(field_id);
-    };
-
     $.fn.resetOrder = function () {
         var i = 1;
         $(this).parent().find('.row').each(function () {
@@ -349,7 +351,7 @@ console.log('asdf')
                 var name = $td.data('field-name-template').replace(new RegExp("#", 'g'), rowId),
                     id = ($td.data('field-id-template') !== undefined) ? $td.data('field-id-template').replace(new RegExp("#", 'g'), rowId) : uniqid();
 
-                if ($td.data('field-type') === 'addMedia') {
+                if ($td.data('field-type') === 'addMedia' || $td.data('field-type') === 'media') {
                     $td.removeMedia();
                 } else {
                     // console.log($td);
@@ -377,7 +379,7 @@ console.log('asdf')
 
         });
 
-        $row.find('input, textarea').first().each(group_title_cahge);
+        $row.find('input, textarea').first().each(_.repeater.group_title_change);
 
     };
 
