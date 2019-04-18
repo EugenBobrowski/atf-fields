@@ -193,12 +193,97 @@
                 $(this).find('input, textarea').first().each(_.repeater.group_title_change);
             });
 
+            $.fn.resetOrder = _.repeater.reset_order;
+            $.fn.resetRow = _.repeater.reset_group;
+
             _.$.groups.on('click', '.header', _.repeater.toggle_collapse);
+            _.$.groups.on('click', '.btn-control-group.plus', _.repeater.repeat_group);
+            _.$.groups.on('click', '.btn-control-group.minus', _.repeater.remove_group);
             _.$.groups.on('change', 'input, textarea', _.repeater.group_title_change);
         },
         toggle_collapse: function (e) {
             e.preventDefault();
             $(this).parents('.row').toggleClass('collapsed');
+        },
+        repeat_group: function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var $thisRow = $this.parents('.row');
+
+            var $newRow = $thisRow.clone();
+            $newRow.hide();
+            $newRow.insertAfter($thisRow);
+            $newRow.resetRow();
+            $newRow.fadeIn('slow');
+            $newRow.resetOrder();
+        },
+        remove_group: function (e) {
+            e.preventDefault();
+            var $this = $(this);
+            var $thisRow = $this.parents('.row');
+
+            var $sibling = $thisRow.siblings('.row');
+            if ($sibling.length > 0) {
+
+                $thisRow.fadeOut('slow', function () {
+                    $thisRow.remove();
+                    $sibling.first().resetOrder();
+                });
+
+            } else {
+                $thisRow.resetRow();
+            }
+        },
+        reset_group: function () {
+            var rowId = uniqid();
+            var $row =  $(this);
+            $row.find('td').each(function () {
+                var $td = $(this);
+
+                if ($td.data('field-name-template') !== undefined) {
+
+                    var name = $td.data('field-name-template').replace(new RegExp("#", 'g'), rowId),
+                        id = ($td.data('field-id-template') !== undefined) ? $td.data('field-id-template').replace(new RegExp("#", 'g'), rowId) : uniqid();
+
+                    if ($td.data('field-type') === 'addMedia' ||
+                        $td.data('field-type') === 'media' ||
+                        $td.data('field-type') === 'media_id') {
+                        $td.removeMedia();
+                    } else {
+                        // console.log($td);
+                    }
+                    // console.log(template);
+                    $td.find('.chosen-select').css('display', 'block').next().remove();
+                    $td.find('input, select')
+                        .attr('id', id)
+                        .attr('name', name)
+
+                        .val('');
+                    // $td.append(template);
+                    // $td.find('.chosen-select').chosen();
+                    name = '';
+                }
+            });
+
+            $row.find('label').each(function () {
+                var $label = $(this);
+                if ($label.data('field-id-template') === undefined) return false;
+
+                var id = $label.data('field-id-template').replace(new RegExp("#", 'g'), rowId);
+
+                $label.attr('for', id);
+
+            });
+
+            $row.find('input, textarea').first().each(_.repeater.group_title_change);
+
+        },
+        reset_order: function () {
+            var i = 1;
+            $(this).parent().find('.row').each(function () {
+                $(this).find('.group-row-id').text(i);
+                i++;
+            });
         },
         group_title_change: function (e) {
             var $field = $(this),
@@ -229,36 +314,6 @@
 
         $atfFields.find('.chosen-select').chosen();
 
-        $atfFields.on('click', '.btn-control-group', function (e) {
-            e.preventDefault();
-            var $this = $(this);
-            var $thisRow = $this.parents('.row');
-            if ($this.hasClass('plus')) {
-
-                var $newRow = $thisRow.clone();
-                $newRow.hide();
-                $newRow.insertAfter($thisRow);
-                $newRow.resetRow();
-                $newRow.fadeIn('slow');
-                $newRow.resetOrder();
-
-
-            } else if ($this.hasClass('minus')) {
-                var $sibling = $thisRow.siblings('.row');
-                if ($sibling.length > 0) {
-
-                    $thisRow.fadeOut('slow', function () {
-                        $thisRow.remove();
-                        $sibling.first().resetOrder();
-                    });
-
-                } else {
-                    $thisRow.resetRow();
-                }
-
-
-            }
-        });
         $('.sections-list ul li a').click(
             function () {
                 var $this = $(this);
@@ -331,58 +386,6 @@
         var s = document.getElementsByTagName('script')[0];
         s.parentNode.insertBefore(wf, s);
     })();
-
-    $.fn.resetOrder = function () {
-        var i = 1;
-        $(this).parent().find('.row').each(function () {
-            $(this).find('.group-row-id').text(i);
-            i++;
-        });
-    };
-
-    $.fn.resetRow = function () {
-        var rowId = uniqid();
-        var $row =  $(this);
-        $row.find('td').each(function () {
-            var $td = $(this);
-
-            if ($td.data('field-name-template') !== undefined) {
-
-                var name = $td.data('field-name-template').replace(new RegExp("#", 'g'), rowId),
-                    id = ($td.data('field-id-template') !== undefined) ? $td.data('field-id-template').replace(new RegExp("#", 'g'), rowId) : uniqid();
-
-                if ($td.data('field-type') === 'addMedia' || $td.data('field-type') === 'media') {
-                    $td.removeMedia();
-                } else {
-                    // console.log($td);
-                }
-                // console.log(template);
-                $td.find('.chosen-select').css('display', 'block').next().remove();
-                $td.find('input, select')
-                    .attr('id', id)
-                    .attr('name', name)
-
-                    .val('');
-                // $td.append(template);
-                // $td.find('.chosen-select').chosen();
-                name = '';
-            }
-        });
-
-        $row.find('label').each(function () {
-            var $label = $(this);
-            if ($label.data('field-id-template') === undefined) return false;
-
-            var id = $label.data('field-id-template').replace(new RegExp("#", 'g'), rowId);
-
-            $label.attr('for', id);
-
-        });
-
-        $row.find('input, textarea').first().each(_.repeater.group_title_change);
-
-    };
-
 
     var uniqid = function (pr, en) {
         var pr = pr || '', en = en || false, result;
