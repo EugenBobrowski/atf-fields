@@ -898,7 +898,9 @@ if (!function_exists('sanitize_atf_fields')) {
                 } else {
 	                return esc_url_raw($value);
                 }
-
+                break;
+            case 'media_id':
+	            return absint($value);
                 break;
             case 'editor':
                 //ToDo: add this field sanitizing
