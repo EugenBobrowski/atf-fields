@@ -13,6 +13,7 @@
         _.$.fields = _.$.body.find('.atf-fields');
         _.search.init();
         _.media.init();
+        _.editor.init();
         _.repeater.init();
     };
     _.search = {
@@ -50,8 +51,8 @@
         },
         results_html: function (r) {
             var str = '';
-            $.each(r, function(index, value) {
-                str += '<li data-value="'+value.value+'" class="atf-field-search-result-item">' + value.html + '</li>';
+            $.each(r, function (index, value) {
+                str += '<li data-value="' + value.value + '" class="atf-field-search-result-item">' + value.html + '</li>';
             });
             return str;
         },
@@ -104,7 +105,7 @@
 
 
             // If the media frame already exists, reopen it.
-            if (typeof(custom_file_frame[type]) !== "undefined") {
+            if (typeof (custom_file_frame[type]) !== "undefined") {
                 // console.log(custom_file_frame);
                 custom_file_frame[type].open();
                 return;
@@ -121,7 +122,7 @@
                 title: $this.data("choose"),
 
                 // Tell the modal to show only images. Ignore if want ALL
-                library: (_.$.current_uploader.hasClass('file')) ? {} : { type: 'image' },
+                library: (_.$.current_uploader.hasClass('file')) ? {} : {type: 'image'},
                 // Customize the submit button.
                 button: {
                     // Set the text of the button.
@@ -144,7 +145,6 @@
                 } else {
                     _.$.current_uploader.find('input').val(attachment.attributes.url).trigger('change');
                 }
-
 
 
                 _.$.current_uploader.find('.atf-options-upload').hide();
@@ -176,6 +176,65 @@
         },
 
     };
+    _.editor = {
+        init: function () {
+            let __ = _.editor;
+            _.$.fields.on('atf.fields.reset_group_item_field', '[data-field-type="editor"]', __.reset_td);
+        },
+        reset_td: function (e, $td, rowId, oldId) {
+            let __ = _.editor;
+            __.id_template = $td.data('field-id-template');
+            let name_template = $td.data('field-name-template');
+            __.find = __.id_template.replace('#', oldId);
+            __.replace = __.id_template.replace('#', rowId);
+
+            let $new = $td.clone();
+
+            console.log($new.find('.quicktags-toolbar').html());
+            $new.find('.quicktags-toolbar').html('').remove();
+
+            $new.find('.mce-tinymce').remove();
+            $new.find('.wp-editor-area').attr('name', name_template.replace('#', rowId));
+            console.log($new.html().replace(new RegExp(__.find, 'g'), __.replace));
+            $td.html($new.html().replace(new RegExp(__.find, 'g'), __.replace));
+
+            var init, $wrap;
+
+
+            tinyMCEPreInit.mceInit[__.replace] = tinyMCEPreInit.mceInit[__.find];
+            tinyMCEPreInit.mceInit[__.replace].selector = tinyMCEPreInit.mceInit[__.replace].selector.replace(__.find, __.replace);
+
+            tinyMCEPreInit.qtInit[__.replace] = tinyMCEPreInit.qtInit[__.find];
+            tinyMCEPreInit.qtInit[__.replace].id = __.replace;
+
+            $wrap = tinymce.$('#wp-' + __.replace + '-wrap');
+
+            if (typeof tinymce !== 'undefined') {
+
+                init = tinyMCEPreInit.mceInit[__.replace];
+
+
+                if (($wrap.hasClass('tmce-active')) && !init.wp_skip_init) {
+                    tinymce.init(init);
+                    if (!window.wpActiveEditor) {
+                        window.wpActiveEditor = __.replace;
+                    }
+                }
+
+            }
+
+
+            if (typeof quicktags !== 'undefined' && $wrap.hasClass('html-active')) {
+                $wrap.removeClass('tmce-active').addClass('html-active');
+                quicktags(tinyMCEPreInit.qtInit[__.replace]);
+                QTags.addButton(tinyMCEPreInit.qtInit[__.replace]);
+                if (!window.wpActiveEditor) {
+                    window.wpActiveEditor = __.replace;
+                }
+            }
+
+        },
+    };
     _.repeater = {
         init: function () {
             _.$.groups = _.$.fields.find('.atf-options-group');
@@ -196,6 +255,8 @@
             $.fn.resetOrder = _.repeater.reset_order;
             $.fn.resetRow = _.repeater.reset_group;
 
+            _.$.fields.on('atf.fields.reset_group_item', _.repeater.reset_group);
+
             _.$.groups.on('click', '.header', _.repeater.toggle_collapse);
             _.$.groups.on('click', '.btn-control-group.plus', _.repeater.repeat_group);
             _.$.groups.on('click', '.btn-control-group.minus', _.repeater.remove_group);
@@ -213,7 +274,7 @@
             var $newRow = $thisRow.clone();
             $newRow.hide();
             $newRow.insertAfter($thisRow);
-            $newRow.resetRow();
+            $newRow.trigger('atf.fields.reset_group_item', [$newRow, $thisRow]);
             $newRow.fadeIn('slow');
             $newRow.resetOrder();
         },
@@ -234,9 +295,10 @@
                 $thisRow.resetRow();
             }
         },
-        reset_group: function () {
+        reset_group: function (e, $row) {
             var rowId = uniqid();
-            var $row =  $(this);
+            let oldId = $row.data('row-id');
+            $row.data('row-id', rowId).attr('data-row-id', rowId);
             $row.find('td').each(function () {
                 var $td = $(this);
 
@@ -250,7 +312,7 @@
                         $td.data('field-type') === 'media_id') {
                         $td.removeMedia();
                     } else {
-                        // console.log($td);
+                        $td.trigger('atf.fields.reset_group_item_field', [$td, rowId, oldId]);
                     }
                     // console.log(template);
                     $td.find('.chosen-select').css('display', 'block').next().remove();
@@ -297,7 +359,7 @@
             $row.find('input, textarea').each(function () {
                 var $field = $(this),
                     field_id = ($field.data('id') === undefined) ? $field.attr('id') : $field.data('id');
-                template = template.replace(new RegExp("{"+field_id+"}", 'g'), $field.val())
+                template = template.replace(new RegExp("{" + field_id + "}", 'g'), $field.val())
             });
 
             $title.html(template);
@@ -361,9 +423,9 @@
         }
 
         jQuery('.atf-datepicker').datepicker({
-            dateFormat : 'dd-mm-yy'
+            dateFormat: 'dd-mm-yy'
         });
-        
+
     });
 
     //googlefonts
