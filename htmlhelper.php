@@ -16,6 +16,7 @@ if (!class_exists('AtfHtmlHelper')) {
 //            wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/smoothness/jquery-ui.css');
 
             wp_enqueue_media();
+	        wp_enqueue_editor();
 
             //atf-fields
             wp_enqueue_style('atf-fields-css', $url . 'assets/fields.css?prefix=' . $prefix, array(), '1.0', 'all');
@@ -103,7 +104,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 if (empty($args['value']) || !is_array($args['value'])) $args['value'] = array(array());
                 foreach ($args['value'] as $row_key => $row_val) {
                     ?>
-                    <div class="row <?php echo ($args['collapsed']) ? 'collapsed' : '' ?>">
+                    <div class="row <?php echo ($args['collapsed']) ? 'collapsed' : '' ?>" data-row-id="<?php echo $row_key; ?>">
                         <div class="header">
                             <div class="group-row-id"><?php echo $i ?></div>
                             <span data-title-template="<?php echo $args['group_title']; ?>"></span>
@@ -191,7 +192,7 @@ if (!class_exists('AtfHtmlHelper')) {
                 $i = 1;
                 if (empty($args['value']) || !is_array($args['value'])) $args['value'] = array(array());
                 foreach ($args['value'] as $row_key => $row_val) {
-                    echo '<tr class="row">';
+                    echo '<tr class="row" data-row-id="'.$row_key.'">';
                     echo '<td class="group-row-id">' . $i . '</td>';
                     foreach ($args['items'] as $key => $item) {
                         $item['id'] = $key;
@@ -612,6 +613,7 @@ if (!class_exists('AtfHtmlHelper')) {
 		    }
 
 	    }
+
 	    public static function search__selected_value($value) {
             return $value;
         }
