@@ -19,7 +19,7 @@ if (!class_exists('AtfHtmlHelper')) {
 	        wp_enqueue_editor();
 
             //atf-fields
-            wp_enqueue_style('atf-fields-css', $url . 'assets/fields.css?prefix=' . $prefix, array(), '1.0', 'all');
+            wp_enqueue_style('atf-fields-css', $url . 'assets/fields.css?prefix=' . $prefix, array(), '1.1', 'all');
             wp_enqueue_script('atf-options-js', $url . 'assets/fields.js?prefix=' . $prefix, array(
                 'jquery', 'wp-color-picker', 'jquery-ui-sortable', 'chosen-script'), '1.5', false);
 
