@@ -390,7 +390,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
 
             ?>
-            <div class="uploader <?php echo ($args['file']) ? 'file' : ''; echo 'save-' . $args['save']; ?> ">
+            <div class="uploader <?php echo ($args['file']) ? 'file' : ''; ?> <?php echo 'save-' . $args['save']; ?> " data-media-type="">
                 <div class="atf-preview" style="<?php echo 'width: ' . $args['preview_size'] . ';'; ?>">
                     <img class="atf-options-upload-screenshot" id="<?php echo esc_attr('screenshot-' . $args['id']); ?>"
                          src="<?php echo esc_url($src); ?>" <?php echo $screenshot; ?>/>
