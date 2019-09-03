@@ -724,13 +724,16 @@ if (!class_exists('AtfHtmlHelper')) {
         {
             $args = wp_parse_args($args, array(
                 'vertical' => true,
+                'sortable' => false,
                 'buttons' => false,
                 'value' => '',
                 'class' => '',
                 'addClass' => '',
             ));
 
-            $args['class'] .= ($args['buttons']) ? ' check-buttons' : '';
+            $args['class'] .= ($args['buttons']) ? ' check-buttons ' : '';
+            $args['class'] .= ($args['sortable']) ? ' sortable-checkboxes checklist ' : '';
+
 
             if (isset($args['taxonomy'])) {
                 if (taxonomy_exists($args['taxonomy'])) {
@@ -758,7 +761,13 @@ if (!class_exists('AtfHtmlHelper')) {
 
             $result = '';
             $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
+            if ($args['sortable']) {
+                $result .= '<ul>';
+            }
             foreach ($options as $val => $label) {
+	            if ($args['sortable']) {
+		            $result .= '<li>';
+	            }
                 $id = esc_attr($args['name'] . '__' . $val);
                 $result .= '<input type="checkbox"'
                     . ' id="' . $id . '"'
@@ -768,8 +777,14 @@ if (!class_exists('AtfHtmlHelper')) {
                 $result .= ' > ';
                 $result .= ' <label for="' . $id . '">' . esc_html($label) . '</label> ';
                 if ($args['vertical']) $result .= '<br />';
+	            if ($args['sortable']) {
+		            $result .= '</li>';
+	            }
 
             }
+	        if ($args['sortable']) {
+		        $result .= '</ul>';
+	        }
             $result .= '</fieldset>';
 
             if (isset($args['desc'])) {

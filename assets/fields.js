@@ -15,7 +15,22 @@
         _.media.init();
         _.editor.init();
         _.repeater.init();
+        _.checklist.init();
     };
+    _.checklist = {
+        init: function () {
+            console.log('sdaff')
+            _.$.checklists = _.$.body.find('.checklist');
+            _.$.checklists.sortable({
+                items: "li",
+                opacity: 0.5,
+                cursor: 'move',
+                axis: 'y',
+                helper: 'clone'
+            });
+        },
+
+    }
     _.search = {
         init: function () {
             _.$.body.on('focus keyup', '.atf-field-search', _.search.search);
