@@ -763,6 +763,13 @@ if (!class_exists('AtfHtmlHelper')) {
             $result .= '<fieldset class="' . esc_attr($args['class'] . $args['addClass']) . '" >';
             if ($args['sortable']) {
                 $result .= '<ul>';
+
+                $_options = array();
+                foreach ($args['value'] as $key) {
+                    $_options[$key] = $options[$key];
+                    unset($options[$key]);
+                }
+                $options = array_merge($_options, $options);
             }
             foreach ($options as $val => $label) {
 	            if ($args['sortable']) {
