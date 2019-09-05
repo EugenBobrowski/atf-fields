@@ -775,7 +775,7 @@ if (!class_exists('AtfHtmlHelper')) {
                     . ' value="' . esc_attr($val) . '" ';
                 $result .= (in_array($val, $args['value'])) ? 'checked="checked"' : '';
                 $result .= ' > ';
-                $result .= ' <label for="' . $id . '">' . esc_html($label) . '</label> ';
+                $result .= ' <label for="' . $id . '">' . $label . '</label> ';
                 if ($args['vertical']) $result .= '<br />';
 	            if ($args['sortable']) {
 		            $result .= '</li>';
