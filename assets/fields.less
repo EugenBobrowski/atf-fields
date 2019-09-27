@@ -562,8 +562,9 @@
       }
     }
 
-
-
+    textarea {
+      width: 100%;
+    }
   }
 
   .upload-field {
@@ -653,7 +654,8 @@
   }
 
   &.form-table {
-    #side-sortables & {
+    #side-sortables &,
+    &.vertical, .vertical > & {
       width: 100%;
       tr {
         display: block;

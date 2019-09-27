@@ -30,7 +30,7 @@
             });
         },
 
-    }
+    };
     _.search = {
         init: function () {
             _.$.body.on('focus keyup', '.atf-field-search', _.search.search);
@@ -195,6 +195,12 @@
         init: function () {
             let __ = _.editor;
             _.$.fields.on('atf.fields.reset_group_item_field', '[data-field-type="editor"]', __.reset_td);
+            _.$.body.on('click', '.quicktags-onclick', __.quicktags);
+        },
+        quicktags: function () {
+            var _this = $(this),
+                id = _this.attr('id');
+            quicktags( { id: id } );
         },
         reset_td: function (e, $td, rowId, oldId) {
             let __ = _.editor;

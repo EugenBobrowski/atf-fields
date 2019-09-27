@@ -34,9 +34,10 @@ if (!class_exists('AtfHtmlHelper')) {
                 'name_prefix' => '',
                 'id_prefix' => '',
                 'row_key' => 0,
+                'vertical' => false,
             ));
             ?>
-            <table class="form-table atf-fields">
+            <table class="form-table atf-fields <?php echo ($args['vertical']) ? 'vertical' : ''; ?>">
                 <tbody>
                 <?php
                 foreach ($fields as $key => $field) {
@@ -93,8 +94,9 @@ if (!class_exists('AtfHtmlHelper')) {
         {
             $args = wp_parse_args($args, array(
                 'vertical' => false,
+                'vertical_fields' => false,
                 'collapsed' => false,
-                'group_title' => '',
+                'group_title' => '{title}',
             ));
             ?>
 
@@ -117,6 +119,7 @@ if (!class_exists('AtfHtmlHelper')) {
                             'name_prefix' => $args['name'] . '[#]',
                             'id_prefix' => $args['id'] . '_#_',
                             'row_key' => $row_key,
+                            'vertical' =>  $args['vertical_fields'],
                         ));
 
                         foreach ($args['items'] as $key => $item) {
@@ -452,7 +455,10 @@ if (!class_exists('AtfHtmlHelper')) {
                 'addClass' => '',
                 'rows' => 10,
                 'cols' => 50,
+                'quicktags' => false,
             ));
+
+            $args['class'] .= ($args['quicktags']) ? ' quicktags-onclick ' : '';
             $args['value'] = wp_unslash($args['value']);
             $result = '<textarea id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" rows="' . esc_attr($args['rows']) . '" cols="' . esc_attr($args['cols']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" >' . esc_textarea($args['value']) . '</textarea>';
             if (isset($args['desc'])) {
