@@ -923,7 +923,7 @@ if (!function_exists('sanitize_atf_fields')) {
                 return sanitize_text_field($value);
                 break;
             case 'media':
-                if (!empty($field['save']) && $field['save'] == 'id') {
+                if (!empty($field['save']) && $field['save'] === 'id') {
                     return absint($value);
                 } else {
 	                return esc_url_raw($value);
