@@ -19,7 +19,6 @@
     };
     _.checklist = {
         init: function () {
-            console.log('sdaff')
             _.$.checklists = _.$.body.find('.checklist');
             _.$.checklists.sortable({
                 items: "li",
@@ -385,7 +384,6 @@
 
             $title.html(template);
 
-            console.log(field_id);
         }
     };
 
