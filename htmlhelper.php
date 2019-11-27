@@ -450,6 +450,7 @@ if (!class_exists('AtfHtmlHelper')) {
         public static function textarea($args = array())
         {
             $args = wp_parse_args($args, array(
+	            'origin_id' => $args['id'],
                 'value' => '',
                 'class' => 'large-text',
                 'addClass' => '',
@@ -460,7 +461,7 @@ if (!class_exists('AtfHtmlHelper')) {
 
             $args['class'] .= ($args['quicktags']) ? ' quicktags-onclick ' : '';
             $args['value'] = wp_unslash($args['value']);
-            $result = '<textarea id="' . esc_attr($args['id']) . '" name="' . esc_attr($args['name']) . '" rows="' . esc_attr($args['rows']) . '" cols="' . esc_attr($args['cols']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" >' . esc_textarea($args['value']) . '</textarea>';
+            $result = '<textarea id="' . esc_attr($args['id']) . '" data-id="' . esc_attr($args['origin_id']) . '" name="' . esc_attr($args['name']) . '" rows="' . esc_attr($args['rows']) . '" cols="' . esc_attr($args['cols']) . '" class="' . esc_attr($args['class'] . $args['addClass']) . '" >' . esc_textarea($args['value']) . '</textarea>';
             if (isset($args['desc'])) {
                 $result .= '<p class="description">' . $args['desc'] . '</p>';
             }
