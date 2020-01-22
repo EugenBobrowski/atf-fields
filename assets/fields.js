@@ -76,7 +76,7 @@
                 $parent = $this.parents('.search-box');
 
             $parent.find('.value-field').val($this.data('value'));
-            $parent.find('.selected').html($this.text());
+            $parent.find('.selected').html($this.html());
 
 
             console.log($this.data('value'));
