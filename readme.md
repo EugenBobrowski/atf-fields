@@ -64,6 +64,70 @@ Just add `<br />` after label
 `class` _(Default: **empty string**)_ - use to apply your custom styles
 or add show as a buttons (styles included). To show in a button style just add class `.check-buttons`
 
+### Search field
+
+```php
+AtfHtmlHelper::checkbox(array(
+    'id'                => 'product_id',
+    'title'             => __('Product'),
+    'type'              => 'search',
+    'ajax_action'       => 'search_product_ajax',
+    'placeholder'       => __( 'Search' ),
+    'selected_callback' => array( $this, 'selected_product_title' )
+));
+```
+
+This field require two callbacks: ajax and callback for selected field.
+
+
+```php 
+add_action( 'wp_ajax_search_product_for_bundle', 'ajax_search_product' );
+
+function ajax_search_product () {
+    $s = sanitize_text_field( $_POST['s'] );
+
+    $q = array( 'post_type' => 'product' );
+
+    if ( ! empty( $s ) ) {
+        $q['s'] = $s;
+    }
+
+    $posts = get_posts( $q );
+    $res   = array();
+    foreach ( $posts as $post ) {
+        $html = '';
+        $html .= get_the_post_thumbnail($post->ID) . ' ';
+        $html .= $post->post_title;
+        $res[] = array( 'value' => $post->ID, 'html' => $html );
+
+    }
+
+    wp_send_json( $res );
+}
+
+function selected_product_title( $value ) {
+
+    if ( empty( $value ) ) {
+        return 'No selected product';
+    }
+
+    $post = get_post( $value );
+
+    if (empty( $post )) {
+        return 'Select';
+    }
+
+    $html = '';
+    $html .= get_the_post_thumbnail($post->ID) . ' ';
+    $html .= $post->post_title;
+
+    return $html;
+}
+
+```
+
+
+
 ### Group
  
 ```php
