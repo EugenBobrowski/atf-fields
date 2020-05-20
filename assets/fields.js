@@ -289,7 +289,7 @@
         repeat_group: function (e) {
             e.preventDefault();
             var $this = $(this);
-            var $thisRow = $this.parents('.row');
+            var $thisRow = $this.parents('.row').eq(0);
 
             var $newRow = $thisRow.clone();
             $newRow.hide();
@@ -301,7 +301,7 @@
         remove_group: function (e) {
             e.preventDefault();
             var $this = $(this);
-            var $thisRow = $this.parents('.row');
+            var $thisRow = $this.parents('.row').eq(0);
 
             var $sibling = $thisRow.siblings('.row');
             if ($sibling.length > 0) {
