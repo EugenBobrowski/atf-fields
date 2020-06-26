@@ -21,7 +21,7 @@ if (!class_exists('AtfHtmlHelper')) {
             //atf-fields
             wp_enqueue_style('atf-fields-css', $url . 'assets/fields.css?prefix=' . $prefix, array(), '1.1', 'all');
             wp_enqueue_script('atf-options-js', $url . 'assets/fields.js?prefix=' . $prefix, array(
-                'jquery', 'wp-color-picker', 'jquery-ui-sortable', 'chosen-script'), '1.5', false);
+                'jquery', 'wp-color-picker', 'jquery-ui-sortable', 'chosen-script'), '1.6', false);
 
             wp_localize_script('atf-options-js', 'atf_html_helper', array('url' => $url . 'assets/blank.png'));
 
