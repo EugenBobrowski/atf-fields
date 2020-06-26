@@ -336,11 +336,22 @@
                     }
                     // console.log(template);
                     $td.find('.chosen-select').css('display', 'block').next().remove();
-                    $td.find('input, select')
+                    $td.find('input[type="text"], select, textarea')
                         .attr('id', id)
                         .attr('name', name)
-
                         .val('');
+
+                    $td.find('input[type="radio"], input[type="checkbox"]').each(function () {
+                        let $checkbox = $(this), val = $checkbox.val(),
+                            oldId = $checkbox.attr('id'),
+                            newId = id + '__' + val;
+                        $checkbox
+                            .attr('id', newId)
+                            .attr('name', name)
+                        $td.find('label[for="' + oldId + '"]')
+                            .attr('for', newId);
+                    });
+
                     // $td.append(template);
                     // $td.find('.chosen-select').chosen();
                     name = '';
