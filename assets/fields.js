@@ -330,13 +330,14 @@
                     if ($td.data('field-type') === 'addMedia' ||
                         $td.data('field-type') === 'media' ||
                         $td.data('field-type') === 'media_id') {
+                        $td.find('.atf-options-upload-screenshot').attr('id', 'screenshot-' + id)
                         $td.removeMedia();
                     } else {
                         $td.trigger('atf.fields.reset_group_item_field', [$td, rowId, oldId]);
                     }
                     // console.log(template);
                     $td.find('.chosen-select').css('display', 'block').next().remove();
-                    $td.find('input[type="text"], select, textarea')
+                    $td.find('input:not([type="radio"], [type="checkbox"]), select, textarea')
                         .attr('id', id)
                         .attr('name', name)
                         .val('');
