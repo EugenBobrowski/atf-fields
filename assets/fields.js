@@ -112,8 +112,8 @@
         insert_value: function (event) {
             var $this = $(this);
             _.$.current_uploader = $this.parents('.uploader');
+
             var type = (_.$.current_uploader.hasClass('file')) ? 'file' : 'image';
-            var save = (_.$.current_uploader.hasClass('save-id')) ? 'id' : 'url';
 
             event.preventDefault();
 
@@ -154,7 +154,7 @@
 
                 _.$.current_uploader.find('.atf-options-upload-screenshot').attr('src', (attachment.attributes.type == 'image') ? attachment.attributes.url : attachment.attributes.icon);
 
-                if (save === 'id') {
+                if (_.$.current_uploader.hasClass('save-id')) {
                     _.$.current_uploader.find('input').val(attachment.attributes.id).trigger('change');
                 } else {
                     _.$.current_uploader.find('input').val(attachment.attributes.url).trigger('change');
@@ -168,8 +168,6 @@
                 _.$.current_uploader.siblings().find('.insert-attachment-id').each(function () {
                     var $some = $(this);
                     var attr = $some.data('attr');
-
-                    console.log(attr);
 
                     $some.attr(attr, attachment.attributes.id);
 
